@@ -1,7 +1,7 @@
 import { Body, Controller, Post, UsePipes, ValidationPipe } from '@nestjs/common';
 import { StudentService } from './student.service';
 import { CreateStudentDto } from './student.dto';
-import { ResendOtpDto, ResetPassword, ResetPasswordLinkDto, VerifyOtpDto } from 'src/common/common.dto';
+import { LoginDto, ResendOtpDto, ResetPassword, ResetPasswordLinkDto, VerifyOtpDto } from 'src/common/common.dto';
 
 @Controller('student')
 export class StudentController {
@@ -36,5 +36,11 @@ export class StudentController {
     @Post('/reset-password')
     async ResetPassword(@Body() dto: ResetPassword): Promise<{message: string}> {
         return await this.studentService.ResetPassword(dto)
+    }
+
+    //Login
+    @Post('/login')
+    async login(@Body() dto: LoginDto) {
+        return await this.studentService.login(dto)
     }
 }

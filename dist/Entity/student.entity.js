@@ -10,6 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.StudentEntity = void 0;
+const general_enum_1 = require("../Enum/general.enum");
 const typeorm_1 = require("typeorm");
 let StudentEntity = class StudentEntity extends typeorm_1.BaseEntity {
 };
@@ -63,6 +64,18 @@ __decorate([
     __metadata("design:type", Boolean)
 ], StudentEntity.prototype, "isRegistered", void 0);
 __decorate([
+    (0, typeorm_1.Column)({ nullable: false, default: 0 }),
+    __metadata("design:type", Number)
+], StudentEntity.prototype, "loginCount", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", Boolean)
+], StudentEntity.prototype, "isLocked", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", Date)
+], StudentEntity.prototype, "locked_until", void 0);
+__decorate([
     (0, typeorm_1.Column)({ nullable: true }),
     __metadata("design:type", String)
 ], StudentEntity.prototype, "isResetLink", void 0);
@@ -74,6 +87,10 @@ __decorate([
     (0, typeorm_1.Column)({ nullable: false, default: false }),
     __metadata("design:type", Boolean)
 ], StudentEntity.prototype, "isresetPasswordLinkSent", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: false, type: 'enum', enum: general_enum_1.Role, default: general_enum_1.Role.STUDENT }),
+    __metadata("design:type", String)
+], StudentEntity.prototype, "role", void 0);
 exports.StudentEntity = StudentEntity = __decorate([
     (0, typeorm_1.Entity)({ name: 'student' })
 ], StudentEntity);

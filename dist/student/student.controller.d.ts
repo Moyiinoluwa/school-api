@@ -1,6 +1,6 @@
 import { StudentService } from './student.service';
 import { CreateStudentDto } from './student.dto';
-import { ResendOtpDto, ResetPassword, ResetPasswordLinkDto, VerifyOtpDto } from 'src/common/common.dto';
+import { LoginDto, ResendOtpDto, ResetPassword, ResetPasswordLinkDto, VerifyOtpDto } from 'src/common/common.dto';
 export declare class StudentController {
     private studentService;
     constructor(studentService: StudentService);
@@ -18,5 +18,8 @@ export declare class StudentController {
     }>;
     ResetPassword(dto: ResetPassword): Promise<{
         message: string;
+    }>;
+    login(dto: LoginDto): Promise<{
+        accesstoken: string;
     }>;
 }

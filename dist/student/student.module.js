@@ -17,6 +17,7 @@ const common_repository_1 = require("../common/common.repository");
 const otp_entity_1 = require("../Entity/otp.entity");
 const mailer_service_1 = require("../Mailer/mailer.service");
 const notification_entity_1 = require("../Entity/notification.entity");
+const jwt_1 = require("@nestjs/jwt");
 let StudentModule = class StudentModule {
 };
 exports.StudentModule = StudentModule;
@@ -24,7 +25,7 @@ exports.StudentModule = StudentModule = __decorate([
     (0, common_1.Module)({
         imports: [typeorm_1.TypeOrmModule.forFeature([student_entity_1.StudentEntity, otp_entity_1.StudentOtpEntity, notification_entity_1.NotificationEntity])],
         controllers: [student_controller_1.StudentController],
-        providers: [student_service_1.StudentService, student_repository_1.StudentRepository, common_repository_1.StudentOtpRepository, mailer_service_1.Mailer, common_repository_1.NotificationRepository],
+        providers: [student_service_1.StudentService, student_repository_1.StudentRepository, common_repository_1.StudentOtpRepository, mailer_service_1.Mailer, common_repository_1.NotificationRepository, jwt_1.JwtService],
     })
 ], StudentModule);
 //# sourceMappingURL=student.module.js.map

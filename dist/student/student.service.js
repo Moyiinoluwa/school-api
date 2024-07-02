@@ -25,12 +25,16 @@ const mailer_service_1 = require("../Mailer/mailer.service");
 const notification_entity_1 = require("../Entity/notification.entity");
 const typeorm_2 = require("typeorm");
 const uuid_1 = require("uuid");
+const jwt_1 = require("@nestjs/jwt");
+const config_1 = require("@nestjs/config");
 let StudentService = class StudentService {
-    constructor(studentRepository, studentOtpRepository, notificationRepository, mailer) {
+    constructor(studentRepository, studentOtpRepository, notificationRepository, mailer, jwt, configService) {
         this.studentRepository = studentRepository;
         this.studentOtpRepository = studentOtpRepository;
         this.notificationRepository = notificationRepository;
         this.mailer = mailer;
+        this.jwt = jwt;
+        this.configService = configService;
     }
     async hashPassword(password) {
         return await bcrypt.hash(password, 12);
@@ -41,6 +45,19 @@ let StudentService = class StudentService {
     async verificationCode() {
         const generate = (0, nanoid_1.customAlphabet)('1234567890', 6);
         return generate();
+    }
+    async signToken(id, email, role) {
+        const payload = {
+            sub: id,
+            email,
+            role
+        };
+        const secret = this.configService.get('SECRET_KEY');
+        const token = await this.jwt.signAsync(payload, {
+            expiresIn: this.configService.get('EXPIRESIN'),
+            secret: secret
+        });
+        return { accesstoken: token };
     }
     async createStudent(dto) {
         const studentRegister = await this.studentRepository.findOne({ where: { email: dto.email } });
@@ -163,12 +180,25 @@ let StudentService = class StudentService {
     async login(dto) {
         const student = await this.studentRepository.findOne({ where: { email: dto.email } });
         if (!student) {
-            throw new common_1.HttpException('This email has not been registered', common_1.HttpStatus.NOT_FOUND);
+            throw new common_1.HttpException('Invalid email or password', common_1.HttpStatus.UNAUTHORIZED);
         }
         const compare = await this.comparePassword(dto.password, student.password);
         if (!compare) {
-            throw new common_1.HttpException('Invalid credentials', common_1.HttpStatus.UNAUTHORIZED);
+            student.loginCount += 1;
         }
+        if (student.loginCount >= 5) {
+            student.isLocked = true;
+            student.locked_until = new Date(Date.now() + 2 * 60 * 60 * 1000);
+            await this.studentRepository.save(student);
+            throw new common_1.HttpException('Invalid password', common_1.HttpStatus.UNAUTHORIZED);
+        }
+        if (!student.isVerified) {
+            throw new common_1.HttpException('Account is not verified, please request for a verification code', common_1.HttpStatus.UNAUTHORIZED);
+        }
+        student.loginCount = 0;
+        student.isLoggedIn = true;
+        await this.studentRepository.save(student);
+        return await this.signToken(student.id, student.email, student.role);
     }
 };
 exports.StudentService = StudentService;
@@ -180,6 +210,8 @@ exports.StudentService = StudentService = __decorate([
     __metadata("design:paramtypes", [student_repository_1.StudentRepository,
         common_repository_1.StudentOtpRepository,
         common_repository_1.NotificationRepository,
-        mailer_service_1.Mailer])
+        mailer_service_1.Mailer,
+        jwt_1.JwtService,
+        config_1.ConfigService])
 ], StudentService);
 //# sourceMappingURL=student.service.js.map

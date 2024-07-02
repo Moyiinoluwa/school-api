@@ -36,6 +36,9 @@ let StudentController = class StudentController {
     async ResetPassword(dto) {
         return await this.studentService.ResetPassword(dto);
     }
+    async login(dto) {
+        return await this.studentService.login(dto);
+    }
 };
 exports.StudentController = StudentController;
 __decorate([
@@ -74,6 +77,13 @@ __decorate([
     __metadata("design:paramtypes", [common_dto_1.ResetPassword]),
     __metadata("design:returntype", Promise)
 ], StudentController.prototype, "ResetPassword", null);
+__decorate([
+    (0, common_1.Post)('/login'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [common_dto_1.LoginDto]),
+    __metadata("design:returntype", Promise)
+], StudentController.prototype, "login", null);
 exports.StudentController = StudentController = __decorate([
     (0, common_1.Controller)('student'),
     __metadata("design:paramtypes", [student_service_1.StudentService])

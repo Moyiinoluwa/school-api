@@ -8,11 +8,12 @@ import { NotificationRepository, StudentOtpRepository } from 'src/common/common.
 import { StudentOtpEntity } from 'src/Entity/otp.entity';
 import { Mailer } from 'src/Mailer/mailer.service';
 import { NotificationEntity } from 'src/Entity/notification.entity';
+import { JwtService } from '@nestjs/jwt';
 
 
 @Module({
   imports: [TypeOrmModule.forFeature([StudentEntity, StudentOtpEntity, NotificationEntity])],
   controllers: [StudentController],
-  providers: [StudentService, StudentRepository, StudentOtpRepository, Mailer, NotificationRepository],
+  providers: [StudentService, StudentRepository, StudentOtpRepository, Mailer, NotificationRepository, JwtService],
 })
 export class StudentModule {}

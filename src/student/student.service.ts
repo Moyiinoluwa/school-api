@@ -24,7 +24,7 @@ export class StudentService {
         @InjectRepository(StudentOtpRepository) private readonly studentOtpRepository: StudentOtpRepository,
         @InjectRepository(NotificationRepository) private readonly notificationRepository: NotificationRepository,
         private readonly mailer: Mailer,
-        private  jwt: JwtService,
+        private jwt: JwtService,
         private configService: ConfigService
     ) { }
 
@@ -45,14 +45,14 @@ export class StudentService {
     }
 
     //Access token
-    async signToken(id: number, email: string, role: string) {
+    async signToken(id: string, email: string, role: string) {
         const payload = {
             sub: id,
             email,
             role
         };
 
-        const secret = this.configService.get('SECRET_KEY') ;
+        const secret = this.configService.get('SECRET_KEY');
         const token = await this.jwt.signAsync(payload, {
             expiresIn: this.configService.get('EXPIRESIN'),
             secret: secret
@@ -152,9 +152,16 @@ export class StudentService {
             //save notification to database
             await this.notificationRepository.save(notification)
 
-            //save to verification notice to student databse
+            //save to verification notice to student database
             await this.studentRepository.save(student)
         }
+
+        //generate access token
+        // const accessToken = await this.signToken(
+        //     student.id,
+        //     student.email,
+        //     student.role
+        // )
         return { isValid: true }
     }
 
@@ -275,23 +282,36 @@ export class StudentService {
 
         //compare the password the student entered with the one saved on the databse
         const compare = await this.comparePassword(dto.password, student.password)
-        if(!compare) {
+        if (!compare) {
             student.loginCount += 1;
         }
 
         //check if the student has exceeded the login attempt limit
-        if(student.loginCount >= 5) {
+        if (student.loginCount >= 5) {
             student.isLocked = true;
             student.locked_until = new Date(Date.now() + 2 * 60 * 60 * 1000); // lock for 2 hours
             await this.studentRepository.save(student)
             throw new HttpException('Invalid password', HttpStatus.UNAUTHORIZED)
         }
 
-        //generate the jwt token
-        const accesstoken = await this.signToken(
-            student.id,
-            student.email,
-            student.role
-        )
+        //if the student account has not been verified
+        if(!student.isVerified)  {
+            throw new HttpException('Account is not verified, please request for a verification code', HttpStatus.UNAUTHORIZED)
+        }
+
+        //if the password matches, reset the login count and unlock the account
+        student.loginCount = 0;
+        student.isLoggedIn = true;
+
+        // //if the student has not reached the attempt limit, calculate number of attempts left
+        // const attemptLeft = 5 - student.loginCount;
+        // await this.studentRepository.save(student)
+
+        // throw new HttpException(`invalid credentails ${attemptLeft} attempts before your account is locked`, HttpStatus.NOT_FOUND)
+
+        //save to database
+        await this.studentRepository.save(student)
+
+        return await this.signToken(student.id, student.email,student.role)
     }
 }
