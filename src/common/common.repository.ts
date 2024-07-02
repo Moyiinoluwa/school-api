@@ -2,9 +2,11 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { NotificationEntity } from "src/Entity/notification.entity";
 import { StudentOtpEntity } from "src/Entity/otp.entity";
+import { TeacherEntity } from "src/Entity/teacher.entity";
+import { TeacherOtpEntity } from "src/Entity/teacherOtp.entity";
 import { Repository } from "typeorm";
 
-
+//student otp
 @Injectable()
 export class StudentOtpRepository extends Repository<StudentOtpEntity> {
     constructor(@InjectRepository(StudentOtpEntity) private readonly studentOtpRepository: StudentOtpRepository) {
@@ -17,6 +19,7 @@ export class StudentOtpRepository extends Repository<StudentOtpEntity> {
 
 }
 
+//notification
 @Injectable()
     export class NotificationRepository extends Repository<NotificationEntity> {
         constructor(@InjectRepository(NotificationEntity) private readonly notificationRepository: NotificationRepository) {
@@ -24,6 +27,17 @@ export class StudentOtpRepository extends Repository<StudentOtpEntity> {
                 notificationRepository.target,
                 notificationRepository.manager,
                 notificationRepository.queryRunner
+            )
+        }
+    }
+
+    //teacher otp
+    @Injectable()
+    export class TeacherOtpRepository extends Repository<TeacherOtpEntity> {
+        constructor(@InjectRepository(TeacherOtpEntity) private readonly teacherOtpRepository: TeacherOtpRepository) {
+            super(teacherOtpRepository.target,
+                teacherOtpRepository.manager,
+                teacherOtpRepository.queryRunner
             )
         }
     }

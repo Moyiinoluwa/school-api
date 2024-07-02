@@ -15,6 +15,8 @@ const config_1 = require("@nestjs/config");
 const notification_entity_1 = require("../Entity/notification.entity");
 const otp_entity_1 = require("../Entity/otp.entity");
 const student_entity_1 = require("../Entity/student.entity");
+const teacher_entity_1 = require("../Entity/teacher.entity");
+const teacherOtp_entity_1 = require("../Entity/teacherOtp.entity");
 let TypeormService = class TypeormService {
     constructor(configservice) {
         this.configservice = configservice;
@@ -29,7 +31,9 @@ let TypeormService = class TypeormService {
             database: 'school-app',
             entities: [student_entity_1.StudentEntity,
                 otp_entity_1.StudentOtpEntity,
-                notification_entity_1.NotificationEntity
+                notification_entity_1.NotificationEntity,
+                teacher_entity_1.TeacherEntity,
+                teacherOtp_entity_1.TeacherOtpEntity
             ],
             synchronize: true
         };

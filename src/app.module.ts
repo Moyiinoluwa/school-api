@@ -7,6 +7,7 @@ import { ConfigModule } from '@nestjs/config';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TypeormService } from './typeorm/typeorm.service';
+import { TeacherModule } from './teacher/teacher.module';
 
 
 
@@ -28,6 +29,7 @@ import { TypeormService } from './typeorm/typeorm.service';
         },
       },
     }),
+    TeacherModule,
   ],
   controllers: [AppController],
   providers: [AppService],

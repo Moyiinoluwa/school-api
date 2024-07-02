@@ -16,6 +16,7 @@ const config_1 = require("@nestjs/config");
 const mailer_1 = require("@nestjs-modules/mailer");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_service_1 = require("./typeorm/typeorm.service");
+const teacher_module_1 = require("./teacher/teacher.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -38,6 +39,7 @@ exports.AppModule = AppModule = __decorate([
                     },
                 },
             }),
+            teacher_module_1.TeacherModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],

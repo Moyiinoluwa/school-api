@@ -4,6 +4,8 @@ import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { NotificationEntity } from 'src/Entity/notification.entity';
 import { StudentOtpEntity } from 'src/Entity/otp.entity';
 import { StudentEntity } from 'src/Entity/student.entity';
+import { TeacherEntity } from 'src/Entity/teacher.entity';
+import { TeacherOtpEntity } from 'src/Entity/teacherOtp.entity';
 
 @Injectable()
 export class TypeormService {
@@ -19,7 +21,9 @@ export class TypeormService {
             database: 'school-app', //this.configservice.get('DATABASE_NAME'),
             entities: [StudentEntity,
                 StudentOtpEntity,
-                NotificationEntity
+                NotificationEntity,
+                TeacherEntity,
+                TeacherOtpEntity
             ],
             synchronize: true
         }

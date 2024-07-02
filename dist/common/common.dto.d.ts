@@ -17,3 +17,10 @@ export declare class LoginDto {
     email: string;
     password: string;
 }
+export declare class verifyTeacherOtpDto {
+    otp: string;
+    email: string;
+}
+export declare class resendTeacherOtpDto {
+    email: string;
+}

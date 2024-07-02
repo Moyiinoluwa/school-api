@@ -1,5 +1,6 @@
 import { IsEmail, IsNotEmpty, IsString, IsStrongPassword } from "class-validator"
 
+//verify student otp
 export class VerifyOtpDto {
      @IsEmail()
      @IsNotEmpty()
@@ -10,18 +11,21 @@ export class VerifyOtpDto {
     otp: string
 }
 
+//resend student otp
 export class ResendOtpDto {
     @IsEmail()
     @IsNotEmpty()
     email: string
 }
 
+//reset student password link
 export class ResetPasswordLinkDto {
     @IsEmail()
     @IsNotEmpty()
     email: string
 }
 
+//resset student password
 export class ResetPassword {
     @IsEmail()
     @IsNotEmpty()
@@ -43,6 +47,7 @@ export class ResetPassword {
     password: string
 }
 
+//student login
 export class LoginDto {
     @IsEmail()
     @IsNotEmpty()
@@ -58,4 +63,22 @@ export class LoginDto {
         minNumbers: 1
     })
     password: string
+}
+
+//verify teacher otp
+export class verifyTeacherOtpDto {
+    @IsNotEmpty()
+    @IsString()
+    otp: string
+
+    @IsEmail()
+    @IsNotEmpty()
+    email: string
+}
+
+//resend teacher verification code
+export class resendTeacherOtpDto{
+    @IsEmail()
+    @IsNotEmpty()
+    email: string
 }
