@@ -1,5 +1,5 @@
 export interface IStudentOtp {
-    id: number;
+    id: string;
     otp: string;
     email: string;
     verified: boolean;
@@ -7,7 +7,7 @@ export interface IStudentOtp {
     expirationTime: Date;
 }
 export declare class StudentOtpEntity implements IStudentOtp {
-    id: number;
+    id: string;
     otp: string;
     email: string;
     verified: boolean;

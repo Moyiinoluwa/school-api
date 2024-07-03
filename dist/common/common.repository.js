@@ -12,7 +12,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TeacherOtpRepository = exports.NotificationRepository = exports.StudentOtpRepository = void 0;
+exports.AdminOtpRepository = exports.TeacherOtpRepository = exports.NotificationRepository = exports.StudentOtpRepository = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const notification_entity_1 = require("../Entity/notification.entity");
@@ -55,4 +55,16 @@ exports.TeacherOtpRepository = TeacherOtpRepository = __decorate([
     __param(0, (0, typeorm_1.InjectRepository)(teacherOtp_entity_1.TeacherOtpEntity)),
     __metadata("design:paramtypes", [TeacherOtpRepository])
 ], TeacherOtpRepository);
+let AdminOtpRepository = class AdminOtpRepository extends typeorm_2.Repository {
+    constructor(adminOtpRepository) {
+        super(adminOtpRepository.target, adminOtpRepository.manager, adminOtpRepository.queryRunner);
+        this.adminOtpRepository = adminOtpRepository;
+    }
+};
+exports.AdminOtpRepository = AdminOtpRepository;
+exports.AdminOtpRepository = AdminOtpRepository = __decorate([
+    (0, common_1.Injectable)(),
+    __param(0, (0, typeorm_1.InjectRepository)(AdminOtpRepository)),
+    __metadata("design:paramtypes", [AdminOtpRepository])
+], AdminOtpRepository);
 //# sourceMappingURL=common.repository.js.map

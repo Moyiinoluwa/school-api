@@ -1,3 +1,4 @@
+import { Role } from "src/Enum/general.enum";
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 export interface ITeacher {
@@ -7,6 +8,16 @@ export interface ITeacher {
     email: string;
     password: string
     id: string
+    createdAt: Date;
+    isActive: true
+    isRegistered: boolean
+    isLoggedIn: boolean
+    isLoggedOut: boolean
+    isVerified: boolean
+    resetLink: string
+    isResetLinkSent: boolean
+    resetPasswordLinkExipration: Date
+    role: Role
 }
     @Entity({ name: 'teacher'})
 export class TeacherEntity implements ITeacher {
@@ -41,11 +52,20 @@ export class TeacherEntity implements ITeacher {
     isRegistered: boolean
 
     @Column({ nullable: false, default: false})
-    iSLoggedIn: boolean
+    isLoggedIn: boolean
 
     @Column({ default: false, nullable: false})
     isLoggedOut: boolean
 
-    //@Column({ nullable: false}) 
+    @Column({ nullable: true })
+    resetLink: string
+    
+    @Column({ nullable: false, default: false}) 
+    isResetLinkSent: boolean
 
+    @Column({nullable: true })
+    resetPasswordLinkExipration: Date
+
+    @Column({ nullable: false, type: 'enum', enum: Role, default: Role.TEACHER})
+    role: Role;
 }

@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.resendTeacherOtpDto = exports.verifyTeacherOtpDto = exports.LoginDto = exports.ResetPassword = exports.ResetPasswordLinkDto = exports.ResendOtpDto = exports.VerifyOtpDto = void 0;
+exports.resetTeacherPasswordDto = exports.ResetDto = exports.resendTeacherOtpDto = exports.verifyTeacherOtpDto = exports.LoginDto = exports.ResetPassword = exports.ResetPasswordLinkDto = exports.ResendOtpDto = exports.VerifyOtpDto = void 0;
 const class_validator_1 = require("class-validator");
 class VerifyOtpDto {
 }
@@ -106,4 +106,37 @@ __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], resendTeacherOtpDto.prototype, "email", void 0);
+class ResetDto {
+}
+exports.ResetDto = ResetDto;
+__decorate([
+    (0, class_validator_1.IsEmail)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], ResetDto.prototype, "email", void 0);
+class resetTeacherPasswordDto {
+}
+exports.resetTeacherPasswordDto = resetTeacherPasswordDto;
+__decorate([
+    (0, class_validator_1.IsEmail)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], resetTeacherPasswordDto.prototype, "email", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], resetTeacherPasswordDto.prototype, "resetLink", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsStrongPassword)({
+        minLength: 8,
+        minLowercase: 1,
+        minUppercase: 1,
+        minSymbols: 1,
+        minNumbers: 1
+    }),
+    __metadata("design:type", String)
+], resetTeacherPasswordDto.prototype, "password", void 0);
 //# sourceMappingURL=common.dto.js.map

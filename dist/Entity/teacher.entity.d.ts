@@ -1,3 +1,4 @@
+import { Role } from "src/Enum/general.enum";
 export interface ITeacher {
     fullname: string;
     username: string;
@@ -5,6 +6,16 @@ export interface ITeacher {
     email: string;
     password: string;
     id: string;
+    createdAt: Date;
+    isActive: true;
+    isRegistered: boolean;
+    isLoggedIn: boolean;
+    isLoggedOut: boolean;
+    isVerified: boolean;
+    resetLink: string;
+    isResetLinkSent: boolean;
+    resetPasswordLinkExipration: Date;
+    role: Role;
 }
 export declare class TeacherEntity implements ITeacher {
     id: string;
@@ -17,6 +28,10 @@ export declare class TeacherEntity implements ITeacher {
     isActive: true;
     isVerified: boolean;
     isRegistered: boolean;
-    iSLoggedIn: boolean;
+    isLoggedIn: boolean;
     isLoggedOut: boolean;
+    resetLink: string;
+    isResetLinkSent: boolean;
+    resetPasswordLinkExipration: Date;
+    role: Role;
 }

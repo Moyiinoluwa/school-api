@@ -23,6 +23,7 @@ const common_repository_1 = require("../common/common.repository");
 const mailer_service_1 = require("../Mailer/mailer.service");
 const teacherOtp_entity_1 = require("../Entity/teacherOtp.entity");
 const typeorm_2 = require("typeorm");
+const uuid_1 = require("uuid");
 let TeacherService = class TeacherService {
     constructor(teacherRepository, teacherOtpRepository, mailer) {
         this.teacherRepository = teacherRepository;
@@ -105,6 +106,34 @@ let TeacherService = class TeacherService {
         await this.teacherOtpRepository.save(codeAgain);
         await this.mailer.sendVerificationMail(dto.email, newTeacherCode, teacher.username);
         return { message: 'A new code has been sent' };
+    }
+    async resetTeacherPasswordLink(dto) {
+        const teacher = await this.teacherRepository.findOne({ where: { email: dto.email } });
+        if (!teacher) {
+            throw new common_1.HttpException('teacher cannot receive link', common_1.HttpStatus.NOT_FOUND);
+        }
+        const linkToken = (0, uuid_1.v4)();
+        const link = `http://localhost:5000/teacher/reset-password?=${linkToken}`;
+        const linkTime = new Date();
+        linkTime.setMinutes(linkTime.getMinutes() + 10);
+        teacher.resetLink = link;
+        teacher.isResetLinkSent = true;
+        teacher.resetPasswordLinkExipration = linkTime;
+        await this.teacherRepository.save(teacher);
+        await this.mailer.resetPasswordMail(dto.email, link, teacher.username);
+        return { message: 'reset link sent' };
+    }
+    async resetTeacherPassword(dto) {
+        const teacher = await this.teacherRepository.findOne({ where: { email: dto.email } });
+        if (!teacher) {
+            throw new common_1.HttpException('Teacher cannot reset password', common_1.HttpStatus.NOT_FOUND);
+        }
+        if (teacher.resetLink !== dto.resetLink) {
+            throw new common_1.HttpException('invalid reset link', common_1.HttpStatus.FORBIDDEN);
+        }
+        const hash = await this.hashPassword(dto.password);
+        teacher.password = hash;
+        return { message: 'password reset successfully' };
     }
 };
 exports.TeacherService = TeacherService;

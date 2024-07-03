@@ -8,8 +8,10 @@ import { customAlphabet } from 'nanoid';
 import { TeacherOtpRepository } from 'src/common/common.repository';
 import { Mailer } from 'src/Mailer/mailer.service';
 import { TeacherOtpEntity } from 'src/Entity/teacherOtp.entity';
-import { resendTeacherOtpDto, verifyTeacherOtpDto } from 'src/common/common.dto';
+import { ResetDto, resendTeacherOtpDto, resetTeacherPasswordDto, verifyTeacherOtpDto } from 'src/common/common.dto';
 import { LessThan } from 'typeorm';
+import { v4 as uuidv4 } from 'uuid';
+
 
 @Injectable()
 export class TeacherService {
@@ -142,6 +144,60 @@ async verifyCode(dto: verifyTeacherOtpDto): Promise<{ isValid: boolean}> {
 
         return {message: 'A new code has been sent'}
     }
+    
+
+    //reset password link
+    async resetTeacherPasswordLink(dto: ResetDto): Promise<{ message: string}> {
+        //check if the email is registered
+        const teacher = await this.teacherRepository.findOne({ where: { email: dto.email} })
+        if(!teacher) {
+            throw new HttpException('teacher cannot receive link', HttpStatus.NOT_FOUND)
+        }
+
+        //set the reset token
+        const linkToken = uuidv4()
+
+        //craft reset link
+        const link = `http://localhost:5000/teacher/reset-password?=${linkToken}`
+
+        //set expiration time for reset 
+        const linkTime = new Date();
+        linkTime.setMinutes(linkTime.getMinutes() + 10)
+
+        //save to database
+        teacher.resetLink = link;
+        teacher.isResetLinkSent = true;
+        teacher.resetPasswordLinkExipration = linkTime
+
+        await this.teacherRepository.save(teacher)
+
+        //send link to teacher via mail
+        await this.mailer.resetPasswordMail(dto.email, link, teacher.username)
+
+        return {message: 'reset link sent'}
+    }
+
+    //reset password
+     async resetTeacherPassword(dto: resetTeacherPasswordDto): Promise<{ message: string}> {
+        //check if the email is registered
+        const teacher = await this.teacherRepository.findOne({ where: { email: dto.email}})
+        if(!teacher) {
+            throw new HttpException('Teacher cannot reset password', HttpStatus.NOT_FOUND)
+        }
+        //valiadte the link
+        if(teacher.resetLink !== dto.resetLink) {
+            throw new HttpException('invalid reset link', HttpStatus.FORBIDDEN)
+        }
+        //reset password
+        const hash = await this.hashPassword(dto.password)
+
+        //save to database
+        teacher.password = hash;
+
+        return { message: 'password reset successfully'}
+     }
+
+     //login
 }
 
  

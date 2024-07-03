@@ -8,6 +8,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TypeormService } from './typeorm/typeorm.service';
 import { TeacherModule } from './teacher/teacher.module';
+import { AdminModule } from './admin/admin.module';
 
 
 
@@ -30,6 +31,7 @@ import { TeacherModule } from './teacher/teacher.module';
       },
     }),
     TeacherModule,
+    AdminModule,
   ],
   controllers: [AppController],
   providers: [AppService],

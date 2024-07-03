@@ -24,3 +24,11 @@ export declare class verifyTeacherOtpDto {
 export declare class resendTeacherOtpDto {
     email: string;
 }
+export declare class ResetDto {
+    email: string;
+}
+export declare class resetTeacherPasswordDto {
+    email: string;
+    resetLink: string;
+    password: string;
+}

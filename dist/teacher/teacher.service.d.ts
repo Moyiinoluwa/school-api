@@ -2,7 +2,7 @@ import { TeacherRepository } from './teacher.repository';
 import { CreateTeacherDto } from './teacher.dto';
 import { TeacherOtpRepository } from 'src/common/common.repository';
 import { Mailer } from 'src/Mailer/mailer.service';
-import { resendTeacherOtpDto, verifyTeacherOtpDto } from 'src/common/common.dto';
+import { ResetDto, resendTeacherOtpDto, resetTeacherPasswordDto, verifyTeacherOtpDto } from 'src/common/common.dto';
 export declare class TeacherService {
     private readonly teacherRepository;
     private readonly teacherOtpRepository;
@@ -17,6 +17,12 @@ export declare class TeacherService {
         isValid: boolean;
     }>;
     resendCode(dto: resendTeacherOtpDto): Promise<{
+        message: string;
+    }>;
+    resetTeacherPasswordLink(dto: ResetDto): Promise<{
+        message: string;
+    }>;
+    resetTeacherPassword(dto: resetTeacherPasswordDto): Promise<{
         message: string;
     }>;
 }

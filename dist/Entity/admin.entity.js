@@ -9,36 +9,40 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.StudentOtpEntity = void 0;
+exports.AdminEntity = void 0;
 const typeorm_1 = require("typeorm");
-let StudentOtpEntity = class StudentOtpEntity {
+let AdminEntity = class AdminEntity {
 };
-exports.StudentOtpEntity = StudentOtpEntity;
+exports.AdminEntity = AdminEntity;
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)('uuid'),
     __metadata("design:type", String)
-], StudentOtpEntity.prototype, "id", void 0);
+], AdminEntity.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({ nullable: false }),
     __metadata("design:type", String)
-], StudentOtpEntity.prototype, "otp", void 0);
+], AdminEntity.prototype, "fullname", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ unique: true }),
+    (0, typeorm_1.Column)({ nullable: false, unique: true }),
     __metadata("design:type", String)
-], StudentOtpEntity.prototype, "email", void 0);
+], AdminEntity.prototype, "email", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'boolean', default: 'false' }),
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", String)
+], AdminEntity.prototype, "password", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: false, unique: true }),
+    __metadata("design:type", String)
+], AdminEntity.prototype, "username", void 0);
+__decorate([
+    (0, typeorm_1.CreateDateColumn)({ nullable: false }),
+    __metadata("design:type", Date)
+], AdminEntity.prototype, "createdAt", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: false }),
     __metadata("design:type", Boolean)
-], StudentOtpEntity.prototype, "verified", void 0);
-__decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", Date)
-], StudentOtpEntity.prototype, "expirationTime", void 0);
-__decorate([
-    (0, typeorm_1.CreateDateColumn)({ type: 'date', nullable: false }),
-    __metadata("design:type", Date)
-], StudentOtpEntity.prototype, "date", void 0);
-exports.StudentOtpEntity = StudentOtpEntity = __decorate([
-    (0, typeorm_1.Entity)({ name: 'otp' })
-], StudentOtpEntity);
-//# sourceMappingURL=otp.entity.js.map
+], AdminEntity.prototype, "isActive", void 0);
+exports.AdminEntity = AdminEntity = __decorate([
+    (0, typeorm_1.Entity)({ name: 'admin' })
+], AdminEntity);
+//# sourceMappingURL=admin.entity.js.map
