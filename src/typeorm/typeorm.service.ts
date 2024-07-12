@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { AdminEntity } from 'src/Entity/admin.entity';
+import { AdminOtpEnitity } from 'src/Entity/adminOtp.entity';
 import { NotificationEntity } from 'src/Entity/notification.entity';
 import { StudentOtpEntity } from 'src/Entity/otp.entity';
 import { StudentEntity } from 'src/Entity/student.entity';
@@ -17,13 +19,15 @@ export class TypeormService {
             host: 'localhost', //this.configservice.get('DATABASE_HOST'),
             port: 5432, //this.configservice.get('DATABASE_PORT'),
             username: 'postgres', // this.configservice.get('DATABASE_USER'),
-            password: 'Collins05', //String (this.configservice.get('DATABASE_PASSWORD')),
-            database: 'school-app', //this.configservice.get('DATABASE_NAME'),
+            password: 'School', //String (this.configservice.get('DATABASE_PASSWORD')),
+            database: 'schoolApp', //this.configservice.get('DATABASE_NAME'),
             entities: [StudentEntity,
                 StudentOtpEntity,
                 NotificationEntity,
                 TeacherEntity,
-                TeacherOtpEntity
+                TeacherOtpEntity, 
+                AdminEntity,
+                AdminOtpEnitity
             ],
             synchronize: true
         }

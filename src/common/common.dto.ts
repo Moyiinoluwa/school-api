@@ -111,3 +111,52 @@ export class resetTeacherPasswordDto {
     })
     password: string
 }
+
+//Verify admin otp
+export class VerifyAdminOtp {
+    @IsEmail()
+    @IsNotEmpty()
+    email: string
+
+    @IsNotEmpty()
+    otp: string
+}
+
+//resend admin otp
+export class ResendAdminOtpDto {
+    @IsEmail()
+    @IsNotEmpty()
+    email: string
+}
+
+//admin reset password link
+export class ResetAdminPasswordLink {
+    @IsEmail()
+    @IsNotEmpty()
+    email: string
+}
+
+//admin password reset
+export class ResetAdminPassword {
+    @IsEmail()
+    @IsNotEmpty()
+    email: string
+    
+    @IsNotEmpty()
+    resetLink: string
+    
+    @IsNotEmpty()
+    @IsStrongPassword({
+        minLength: 8,
+        minLowercase: 1,
+        minUppercase: 1,
+        minSymbols: 1,
+        minNumbers: 1
+    })
+    password: string
+}
+
+// profile-pic
+export class ProfilePicDto {
+     id: string;
+  }

@@ -32,3 +32,21 @@ export declare class resetTeacherPasswordDto {
     resetLink: string;
     password: string;
 }
+export declare class VerifyAdminOtp {
+    email: string;
+    otp: string;
+}
+export declare class ResendAdminOtpDto {
+    email: string;
+}
+export declare class ResetAdminPasswordLink {
+    email: string;
+}
+export declare class ResetAdminPassword {
+    email: string;
+    resetLink: string;
+    password: string;
+}
+export declare class ProfilePicDto {
+    id: string;
+}

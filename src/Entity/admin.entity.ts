@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty } from "class-validator";
+
 import { Role } from "src/Enum/general.enum";
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
 
@@ -9,14 +9,14 @@ import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeor
     password: string;
     username: string
     createdAt: Date;
-    isActive: true;
-    // isRegistered: boolean;
-    // isLoggedIn: boolean;
-    // isLoggedOut: boolean;
-    // resetLink: string;
-    // isResetLinkSent: boolean;
-    // resetLinlExpirationTime: Date;
-    // role: Role;
+    //isActive: true;
+     isRegistered: boolean;
+     isLoggedIn: boolean;
+    isLoggedOut: boolean;
+     resetLink: string;
+     isResetLinkSent: boolean;
+     resetLinlExpirationTime: Date;
+     role: Role;
  }
 
 @Entity({ name: 'admin'})
@@ -41,6 +41,27 @@ import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeor
     @CreateDateColumn ({ nullable: false })
     createdAt: Date;
 
-    @Column({ nullable: false})
-    isActive: true;
+   //  @Column({ nullable: false})
+   //  isActive: true;
+
+   @Column({ nullable: false, default: false })
+   isLoggedIn: boolean;
+
+   @Column({ nullable: false, default: false})
+   isLoggedOut: boolean;
+
+   @Column({ nullable: false, default: false })
+   isRegistered: boolean;
+
+   @Column({ nullable: true })
+   resetLink: string;
+
+   @Column({ nullable: false, default: false })
+   isResetLinkSent: boolean;
+
+   @Column({ nullable: true })
+   resetLinlExpirationTime: Date;
+
+   @Column({ nullable: false, type: 'enum', enum: Role, default: Role.TEACHER }) 
+   role: Role;
  }

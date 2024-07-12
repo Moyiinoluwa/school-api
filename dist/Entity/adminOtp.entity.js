@@ -35,7 +35,7 @@ __decorate([
     __metadata("design:type", Date)
 ], AdminOtpEnitity.prototype, "createdAt", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ nullable: false }),
+    (0, typeorm_1.Column)({ nullable: false, default: false }),
     __metadata("design:type", Boolean)
 ], AdminOtpEnitity.prototype, "verified", void 0);
 exports.AdminOtpEnitity = AdminOtpEnitity = __decorate([

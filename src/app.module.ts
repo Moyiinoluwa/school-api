@@ -9,6 +9,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { TypeormService } from './typeorm/typeorm.service';
 import { TeacherModule } from './teacher/teacher.module';
 import { AdminModule } from './admin/admin.module';
+import { CmsModule } from './cms/cms.module';
 
 
 
@@ -32,6 +33,7 @@ import { AdminModule } from './admin/admin.module';
     }),
     TeacherModule,
     AdminModule,
+    CmsModule
   ],
   controllers: [AppController],
   providers: [AppService],

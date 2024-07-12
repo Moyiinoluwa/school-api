@@ -92,7 +92,7 @@ let TeacherService = class TeacherService {
         }
         ;
         const code = await this.teacherOtpRepository.findOne({ where: { otp: dto.email, expirationTime: (0, typeorm_2.LessThan)(new Date()) } });
-        if (!code) {
+        if (code) {
             throw new common_1.HttpException('the previous code has not expired', common_1.HttpStatus.BAD_REQUEST);
         }
         const newTeacherCode = await this.createCode();

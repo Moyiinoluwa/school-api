@@ -23,4 +23,6 @@ export class CreateStudentDto {
         minUppercase: 1
      })
     password: string;
+
+    
 }

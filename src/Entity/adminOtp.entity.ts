@@ -26,6 +26,6 @@ export interface IAdminOtp {
         @Column({nullable: false})
         createdAt: Date;
 
-        @Column({ nullable: false })
+        @Column({ nullable: false, default: false })
         verified: boolean;
     }

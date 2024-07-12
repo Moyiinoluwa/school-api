@@ -12,6 +12,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.TypeormService = void 0;
 const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
+const admin_entity_1 = require("../Entity/admin.entity");
+const adminOtp_entity_1 = require("../Entity/adminOtp.entity");
 const notification_entity_1 = require("../Entity/notification.entity");
 const otp_entity_1 = require("../Entity/otp.entity");
 const student_entity_1 = require("../Entity/student.entity");
@@ -27,13 +29,15 @@ let TypeormService = class TypeormService {
             host: 'localhost',
             port: 5432,
             username: 'postgres',
-            password: 'Collins05',
-            database: 'school-app',
+            password: 'School',
+            database: 'schoolApp',
             entities: [student_entity_1.StudentEntity,
                 otp_entity_1.StudentOtpEntity,
                 notification_entity_1.NotificationEntity,
                 teacher_entity_1.TeacherEntity,
-                teacherOtp_entity_1.TeacherOtpEntity
+                teacherOtp_entity_1.TeacherOtpEntity,
+                admin_entity_1.AdminEntity,
+                adminOtp_entity_1.AdminOtpEnitity
             ],
             synchronize: true
         };

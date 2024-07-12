@@ -10,6 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AdminEntity = void 0;
+const general_enum_1 = require("../Enum/general.enum");
 const typeorm_1 = require("typeorm");
 let AdminEntity = class AdminEntity {
 };
@@ -39,9 +40,33 @@ __decorate([
     __metadata("design:type", Date)
 ], AdminEntity.prototype, "createdAt", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ nullable: false }),
+    (0, typeorm_1.Column)({ nullable: false, default: false }),
     __metadata("design:type", Boolean)
-], AdminEntity.prototype, "isActive", void 0);
+], AdminEntity.prototype, "isLoggedIn", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: false, default: false }),
+    __metadata("design:type", Boolean)
+], AdminEntity.prototype, "isLoggedOut", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: false, default: false }),
+    __metadata("design:type", Boolean)
+], AdminEntity.prototype, "isRegistered", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", String)
+], AdminEntity.prototype, "resetLink", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: false, default: false }),
+    __metadata("design:type", Boolean)
+], AdminEntity.prototype, "isResetLinkSent", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", Date)
+], AdminEntity.prototype, "resetLinlExpirationTime", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: false, type: 'enum', enum: general_enum_1.Role, default: general_enum_1.Role.TEACHER }),
+    __metadata("design:type", String)
+], AdminEntity.prototype, "role", void 0);
 exports.AdminEntity = AdminEntity = __decorate([
     (0, typeorm_1.Entity)({ name: 'admin' })
 ], AdminEntity);

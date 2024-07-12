@@ -119,7 +119,7 @@ async verifyCode(dto: verifyTeacherOtpDto): Promise<{ isValid: boolean}> {
 
         //check if the previous code has  not expired
         const code = await this.teacherOtpRepository.findOne({ where: { otp: dto.email, expirationTime: LessThan ( new Date() )}})
-        if(!code) {
+        if(code) {
             throw new HttpException('the previous code has not expired', HttpStatus.BAD_REQUEST)
         }
 

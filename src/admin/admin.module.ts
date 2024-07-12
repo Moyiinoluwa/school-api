@@ -8,9 +8,10 @@ import { AdminRepository } from './admin.repository';
 import { Mailer } from 'src/Mailer/mailer.service';
 import { AdminOtpRepository } from 'src/common/common.repository';
 
+
 @Module({
   imports: [TypeOrmModule.forFeature([AdminEntity, AdminOtpEnitity])],
   controllers: [AdminController],
-  providers: [AdminService, AdminRepository, AdminOtpRepository, Mailer]
+  providers: [ AdminService, AdminRepository, AdminOtpRepository, Mailer]
 })
 export class AdminModule {}

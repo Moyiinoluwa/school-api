@@ -20,4 +20,6 @@ export declare class StudentEntity extends BaseEntity {
     resetPasswordLinkExpirationTime: Date;
     isresetPasswordLinkSent: boolean;
     role: Role;
+    profilePicture: string;
+    score: number;
 }

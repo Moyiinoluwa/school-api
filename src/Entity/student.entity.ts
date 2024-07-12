@@ -59,5 +59,11 @@ export class StudentEntity extends BaseEntity{
 
     @Column({ nullable: false, type: 'enum', enum: Role, default: Role.STUDENT})
     role: Role
+
+    @Column({ nullable: true })
+    profilePicture: string
+
+    @Column({ nullable: true })
+    score: number
 }
 

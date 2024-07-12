@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AdminOtpRepository = exports.TeacherOtpRepository = exports.NotificationRepository = exports.StudentOtpRepository = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
+const adminOtp_entity_1 = require("../Entity/adminOtp.entity");
 const notification_entity_1 = require("../Entity/notification.entity");
 const otp_entity_1 = require("../Entity/otp.entity");
 const teacherOtp_entity_1 = require("../Entity/teacherOtp.entity");
@@ -64,7 +65,7 @@ let AdminOtpRepository = class AdminOtpRepository extends typeorm_2.Repository {
 exports.AdminOtpRepository = AdminOtpRepository;
 exports.AdminOtpRepository = AdminOtpRepository = __decorate([
     (0, common_1.Injectable)(),
-    __param(0, (0, typeorm_1.InjectRepository)(AdminOtpRepository)),
+    __param(0, (0, typeorm_1.InjectRepository)(adminOtp_entity_1.AdminOtpEnitity)),
     __metadata("design:paramtypes", [AdminOtpRepository])
 ], AdminOtpRepository);
 //# sourceMappingURL=common.repository.js.map

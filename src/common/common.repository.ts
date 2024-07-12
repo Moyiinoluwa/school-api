@@ -42,15 +42,18 @@ export class StudentOtpRepository extends Repository<StudentOtpEntity> {
         }
     }
 
+
     //admin otp
     @Injectable()
-    export class AdminOtpRepository extends Repository<AdminOtpEnitity> {
-        constructor(@InjectRepository(AdminOtpRepository) private readonly adminOtpRepository: AdminOtpRepository) {
-            super(adminOtpRepository.target,
-                adminOtpRepository.manager,
-                adminOtpRepository.queryRunner
-            )
+        export class AdminOtpRepository extends Repository<AdminOtpEnitity>  {
+            constructor(@InjectRepository(AdminOtpEnitity) private readonly adminOtpRepository: AdminOtpRepository) {
+                super(adminOtpRepository.target,
+                    adminOtpRepository.manager,
+                    adminOtpRepository.queryRunner
+                )
+            }
         }
-    }
+     
+    
 
 

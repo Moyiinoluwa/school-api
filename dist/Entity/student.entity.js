@@ -91,6 +91,14 @@ __decorate([
     (0, typeorm_1.Column)({ nullable: false, type: 'enum', enum: general_enum_1.Role, default: general_enum_1.Role.STUDENT }),
     __metadata("design:type", String)
 ], StudentEntity.prototype, "role", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", String)
+], StudentEntity.prototype, "profilePicture", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", Number)
+], StudentEntity.prototype, "score", void 0);
 exports.StudentEntity = StudentEntity = __decorate([
     (0, typeorm_1.Entity)({ name: 'student' })
 ], StudentEntity);
