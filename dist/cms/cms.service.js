@@ -45,17 +45,39 @@ let CmsService = class CmsService {
         }
         return score;
     }
-    async messageTeacher(id) {
-        const student = await this.studentRepository.findOne({ where: { id } });
+    async messageTeacher(sender_id, reciever_id, message) {
+        const student = await this.studentRepository.findOne({ where: { id: sender_id } });
         if (!student) {
             throw new common_1.HttpException('student cannot text teacher', common_1.HttpStatus.NOT_FOUND);
         }
-        const teacher = await this.teacherRepository.findOne({ where: { id } });
+        const teacher = await this.teacherRepository.findOne({ where: { id: reciever_id } });
         if (!teacher) {
             throw new common_1.HttpException('teacher not permitted to text student', common_1.HttpStatus.NOT_FOUND);
         }
         const text = new message_entity_1.MessageEntity();
-        return;
+        text.sender_id = student.username;
+        text.reciever_id = teacher.username;
+        text.date = new Date();
+        text.message = message;
+        await this.messageRepository.save(text);
+        return { message: 'Message sent to teacher' };
+    }
+    async studentToStudent(sender_id, reciever_id, message) {
+        const student = await this.studentRepository.findOne({ where: { id: sender_id } });
+        if (!student) {
+            throw new common_1.HttpException('student cannot send message', common_1.HttpStatus.NOT_FOUND);
+        }
+        const aStudent = await this.studentRepository.findOne({ where: { id: reciever_id } });
+        if (!aStudent) {
+            throw new common_1.HttpException('student cannot recieve message', common_1.HttpStatus.NOT_FOUND);
+        }
+        const gist = new message_entity_1.MessageEntity();
+        gist.reciever_id = aStudent.username;
+        gist.sender_id = student.username;
+        gist.date = new Date();
+        gist.message = message;
+        await this.messageRepository.save(gist);
+        return { message: 'Message sent to the other student' };
     }
 };
 exports.CmsService = CmsService;

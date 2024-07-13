@@ -26,8 +26,8 @@ import { CmsModule } from './cms/cms.module';
         port: 587,
         secure: false,
         auth: {
-           user: 'nodetutorial15@gmail.com',
-           pass: 'mofillamqccvfddl'
+           user: process.env.AUTH_EMAIL,
+           pass: process.env.AUTH_PASSWORD
         },
       },
     }),

@@ -1,4 +1,5 @@
-import { IsEmail, IsNotEmpty, IsString, IsStrongPassword } from "class-validator"
+import { match } from "assert"
+import { IsEmail, IsNotEmpty, IsString, IsStrongPassword, Matches, matches } from "class-validator"
 
 //verify student otp
 export class VerifyOtpDto {
@@ -156,7 +157,31 @@ export class ResetAdminPassword {
     password: string
 }
 
-// profile-pic
-export class ProfilePicDto {
-     id: string;
-  }
+ //change password
+ export class ChangePasswordDto {
+    @IsNotEmpty()
+    @IsStrongPassword({
+        minLength: 8,
+        minLowercase: 1,
+        minUppercase: 1,
+        minSymbols: 1,
+        minNumbers: 1
+    })
+    oldPassword: string
+
+    @IsString()
+    @IsNotEmpty()
+    @IsStrongPassword({
+        minLength: 8,
+        minLowercase: 1,
+        minUppercase: 1,
+        minSymbols: 1,
+        minNumbers: 1
+    })
+    newPassword: string
+    // @IsString()
+    // @IsNotEmpty()
+    // //@match('newPassword', { message:'ConfirmPassword does not match the newPassword'})
+    // confirmPassword: string
+ }
+

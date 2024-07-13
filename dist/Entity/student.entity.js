@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.StudentEntity = void 0;
 const general_enum_1 = require("../Enum/general.enum");
 const typeorm_1 = require("typeorm");
+const otp_entity_1 = require("./otp.entity");
 let StudentEntity = class StudentEntity extends typeorm_1.BaseEntity {
 };
 exports.StudentEntity = StudentEntity;
@@ -99,6 +100,10 @@ __decorate([
     (0, typeorm_1.Column)({ nullable: true }),
     __metadata("design:type", Number)
 ], StudentEntity.prototype, "score", void 0);
+__decorate([
+    (0, typeorm_1.OneToOne)(() => otp_entity_1.StudentOtpEntity, (studentOtp) => studentOtp.student),
+    __metadata("design:type", StudentEntity)
+], StudentEntity.prototype, "studentOtp", void 0);
 exports.StudentEntity = StudentEntity = __decorate([
     (0, typeorm_1.Entity)({ name: 'student' })
 ], StudentEntity);

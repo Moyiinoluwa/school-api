@@ -1,5 +1,6 @@
 import { Role } from "src/Enum/general.enum";
-import { BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, CreateDateColumn, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { StudentOtpEntity } from "./otp.entity";
 
 @Entity({ name: 'student'})
 export class StudentEntity extends BaseEntity{
@@ -65,5 +66,8 @@ export class StudentEntity extends BaseEntity{
 
     @Column({ nullable: true })
     score: number
+
+    @OneToOne(() => StudentOtpEntity, (studentOtp) => studentOtp.student )
+    studentOtp: StudentEntity
 }
 

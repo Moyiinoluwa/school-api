@@ -5,6 +5,7 @@ import { StudentViewScoreDto } from './cms.dto';
 import { TeacherRepository } from 'src/teacher/teacher.repository';
 import { MessageRepository } from './cms.repository';
 import { MessageEntity } from 'src/Entity/message.entity';
+import { ChangePasswordDto } from 'src/common/common.dto';
 
 @Injectable()
 export class CmsService {
@@ -49,26 +50,60 @@ export class CmsService {
     }
 
     //student can see the list of teachers and message them
-    async messageTeacher(id: string ): Promise<{ message: string }> {
+    async messageTeacher(sender_id: string,  reciever_id: string, message: string): Promise<{ message: string }> {
         //verify student by id
-        const student = await this.studentRepository.findOne({ where: { id }})
+        const student = await this.studentRepository.findOne({ where: { id: sender_id}})
         if(!student) {
             throw new HttpException('student cannot text teacher', HttpStatus.NOT_FOUND)
         }
         
     //verify teacher by id
-    const teacher = await this.teacherRepository.findOne({ where: { id }})
+    const teacher = await this.teacherRepository.findOne({ where: { id: reciever_id }})
     if(!teacher) {
         throw new HttpException('teacher not permitted to text student', HttpStatus.NOT_FOUND)
     }
     //student create a message and save to database
     const text = new MessageEntity()
-    
-        return
+    text.sender_id = student.username;
+    text.reciever_id = teacher.username;
+    text.date = new Date();
+    text.message = message;
+
+    await this.messageRepository.save(text);
+
+        return { message: 'Message sent to teacher'}
     }
 
     //student can message each other
+    async studentToStudent(sender_id: string, reciever_id: string, message: string): Promise<{ message: string}> {
+
+        //verify sender authentication
+        const student = await this.studentRepository.findOne({ where: {id: sender_id }})
+        if(!student) {
+            throw new HttpException('student cannot send message', HttpStatus.NOT_FOUND)
+        }
+
+        //verify reciever auth
+        const aStudent  = await this.studentRepository.findOne({ where: {id: reciever_id}})
+        if(!aStudent) {
+            throw new HttpException('student cannot recieve message', HttpStatus.NOT_FOUND) 
+        }
+
+        //save message to database
+        const gist = new MessageEntity()
+        gist.reciever_id = aStudent.username;
+        gist.sender_id = student.username;
+        gist.date = new Date();
+        gist.message = message;
+
+        await this.messageRepository.save(gist)
+
+        return { message: 'Message sent to the other student'}
+    }
+    
+    
+    
+    //student upload answers to 
     //student can download the assignment file
-    //student upload answers to assignment
-    //
+    //logout
 }

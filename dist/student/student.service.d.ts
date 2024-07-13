@@ -1,5 +1,5 @@
 import { StudentRepository } from './student.repository';
-import { CreateStudentDto } from './student.dto';
+import { CreateStudentDto, UpdateStudentDto } from './student.dto';
 import { NotificationRepository, StudentOtpRepository } from 'src/common/common.repository';
 import { Mailer } from 'src/Mailer/mailer.service';
 import { LoginDto, ResendOtpDto, ResetPassword, ResetPasswordLinkDto, VerifyOtpDto } from 'src/common/common.dto';
@@ -36,5 +36,8 @@ export declare class StudentService {
     }>;
     login(dto: LoginDto): Promise<{
         accesstoken: string;
+    }>;
+    updateProfile(dto: UpdateStudentDto, userId: string): Promise<{
+        message: string;
     }>;
 }

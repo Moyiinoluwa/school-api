@@ -10,7 +10,10 @@ export declare class CmsService {
         message: string;
     }>;
     viewStudentScore(id: string, subject: string): Promise<number>;
-    messageTeacher(id: string): Promise<{
+    messageTeacher(sender_id: string, reciever_id: string, message: string): Promise<{
+        message: string;
+    }>;
+    studentToStudent(sender_id: string, reciever_id: string, message: string): Promise<{
         message: string;
     }>;
 }

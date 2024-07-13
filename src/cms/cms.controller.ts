@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Post, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { CmsService } from './cms.service';
 import { UploadService } from 'src/Helpers/upload.service';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -27,4 +27,19 @@ export class CmsController {
        return await this.cmsService.viewStudentScore(id, subject)  
 }
 
+    //student send teacher message
+    @Post('/message/:sender_id/:reciever_id')
+    async sendTeacherMessage(@Param('sender_id') sender_id: string,   @Param('reciever_id') reciever_id: string,
+     @Body('message') message: string): Promise<{ message: string }> {
+        return await this.cmsService.messageTeacher(sender_id, reciever_id, message)
+    }
+
+    //student send message to another student
+    @Post('/message-student/:sender_id/:reciever_id')
+    async sendStudentMessage(@Param('sender_id') sender_id: string,   @Param('reciever_id') reciever_id: string,
+    @Body('message') message: string): Promise<{ message: string }> {
+        return await this.cmsService.studentToStudent(sender_id, reciever_id, message)
+    }
+
+    
 }

@@ -14,14 +14,18 @@ const student_repository_1 = require("../student/student.repository");
 const typeorm_1 = require("@nestjs/typeorm");
 const student_entity_1 = require("../Entity/student.entity");
 const upload_service_1 = require("../Helpers/upload.service");
+const teacher_repository_1 = require("../teacher/teacher.repository");
+const cms_repository_1 = require("./cms.repository");
+const teacher_entity_1 = require("../Entity/teacher.entity");
+const message_entity_1 = require("../Entity/message.entity");
 let CmsModule = class CmsModule {
 };
 exports.CmsModule = CmsModule;
 exports.CmsModule = CmsModule = __decorate([
     (0, common_1.Module)({
-        imports: [typeorm_1.TypeOrmModule.forFeature([student_entity_1.StudentEntity])],
+        imports: [typeorm_1.TypeOrmModule.forFeature([student_entity_1.StudentEntity, teacher_entity_1.TeacherEntity, message_entity_1.MessageEntity])],
         controllers: [cms_controller_1.CmsController],
-        providers: [cms_service_1.CmsService, student_repository_1.StudentRepository, upload_service_1.UploadService]
+        providers: [cms_service_1.CmsService, student_repository_1.StudentRepository, upload_service_1.UploadService, teacher_repository_1.TeacherRepository, cms_repository_1.MessageRepository]
     })
 ], CmsModule);
 //# sourceMappingURL=cms.module.js.map

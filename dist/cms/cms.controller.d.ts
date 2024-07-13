@@ -9,4 +9,10 @@ export declare class CmsController {
         message: string;
     }>;
     viewStudentScore(id: string, subject: string): Promise<number>;
+    sendTeacherMessage(sender_id: string, reciever_id: string, message: string): Promise<{
+        message: string;
+    }>;
+    sendStudentMessage(sender_id: string, reciever_id: string, message: string): Promise<{
+        message: string;
+    }>;
 }

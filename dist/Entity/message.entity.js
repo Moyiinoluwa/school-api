@@ -30,7 +30,11 @@ __decorate([
     (0, typeorm_1.Column)({ nullable: false }),
     __metadata("design:type", String)
 ], MessageEntity.prototype, "message", void 0);
+__decorate([
+    (0, typeorm_1.CreateDateColumn)({ nullable: false }),
+    __metadata("design:type", Date)
+], MessageEntity.prototype, "date", void 0);
 exports.MessageEntity = MessageEntity = __decorate([
-    (0, typeorm_1.Entity)()
+    (0, typeorm_1.Entity)({ name: 'message' })
 ], MessageEntity);
 //# sourceMappingURL=message.entity.js.map

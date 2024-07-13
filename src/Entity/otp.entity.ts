@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { StudentEntity } from "./student.entity";
 
 export interface IStudentOtp {
     id: string;
@@ -29,4 +30,7 @@ export class StudentOtpEntity implements IStudentOtp{
     @CreateDateColumn({ type: 'date', nullable: false})
     date: Date;
      
+    @OneToOne(() => StudentEntity, (student) => student.studentOtp)
+    @JoinColumn({ name: 'student_id'})
+    student: StudentEntity
 }

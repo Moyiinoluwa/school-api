@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ProfilePicDto = exports.ResetAdminPassword = exports.ResetAdminPasswordLink = exports.ResendAdminOtpDto = exports.VerifyAdminOtp = exports.resetTeacherPasswordDto = exports.ResetDto = exports.resendTeacherOtpDto = exports.verifyTeacherOtpDto = exports.LoginDto = exports.ResetPassword = exports.ResetPasswordLinkDto = exports.ResendOtpDto = exports.VerifyOtpDto = void 0;
+exports.ChangePasswordDto = exports.ResetAdminPassword = exports.ResetAdminPasswordLink = exports.ResendAdminOtpDto = exports.VerifyAdminOtp = exports.resetTeacherPasswordDto = exports.ResetDto = exports.resendTeacherOtpDto = exports.verifyTeacherOtpDto = exports.LoginDto = exports.ResetPassword = exports.ResetPasswordLinkDto = exports.ResendOtpDto = exports.VerifyOtpDto = void 0;
 const class_validator_1 = require("class-validator");
 class VerifyOtpDto {
 }
@@ -190,7 +190,30 @@ __decorate([
     }),
     __metadata("design:type", String)
 ], ResetAdminPassword.prototype, "password", void 0);
-class ProfilePicDto {
+class ChangePasswordDto {
 }
-exports.ProfilePicDto = ProfilePicDto;
+exports.ChangePasswordDto = ChangePasswordDto;
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsStrongPassword)({
+        minLength: 8,
+        minLowercase: 1,
+        minUppercase: 1,
+        minSymbols: 1,
+        minNumbers: 1
+    }),
+    __metadata("design:type", String)
+], ChangePasswordDto.prototype, "oldPassword", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsStrongPassword)({
+        minLength: 8,
+        minLowercase: 1,
+        minUppercase: 1,
+        minSymbols: 1,
+        minNumbers: 1
+    }),
+    __metadata("design:type", String)
+], ChangePasswordDto.prototype, "newPassword", void 0);
 //# sourceMappingURL=common.dto.js.map

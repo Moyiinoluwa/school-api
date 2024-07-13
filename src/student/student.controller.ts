@@ -1,6 +1,6 @@
-import { Body, Controller, Post, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Param, Post, Put, UsePipes, ValidationPipe } from '@nestjs/common';
 import { StudentService } from './student.service';
-import { CreateStudentDto } from './student.dto';
+import { CreateStudentDto, UpdateStudentDto } from './student.dto';
 import { LoginDto, ResendOtpDto, ResetPassword, ResetPasswordLinkDto, VerifyOtpDto } from 'src/common/common.dto';
 
 @Controller('student')
@@ -43,4 +43,11 @@ export class StudentController {
     async login(@Body() dto: LoginDto) {
         return await this.studentService.login(dto)
     }
+
+    //update profile
+//     @Put('/update/:id')
+//     async updateProfile( @Body() dto: UpdateStudentDto, @Param('userId') userId: string): Promise<{ message: string}> {
+//     return await this.studentService.updateProfile(dto, userId)
+// }
+
 }

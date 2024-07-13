@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { StudentRepository } from './student.repository';
-import { CreateStudentDto } from './student.dto';
+import { CreateStudentDto, UpdateStudentDto } from './student.dto';
 import * as bcrypt from 'bcrypt';
 import { StudentEntity } from 'src/Entity/student.entity';
 import { customAlphabet } from 'nanoid';
@@ -87,9 +87,6 @@ export class StudentService {
         //generate verification code
         const emailCode = await this.verificationCode();
 
-        //send verification code to student via mail
-        await this.mailer.sendVerificationMail(dto.email, emailCode, dto.username)
-
         //set expiration time for otp 
         const otpExpiration = new Date();
         await otpExpiration.setMinutes(otpExpiration.getMinutes() + 10)
@@ -109,6 +106,9 @@ export class StudentService {
         notification.message = `new student registered successfully`;
 
         await this.notificationRepository.save(notification)
+
+        //send verification code to student via mail
+        await this.mailer.sendVerificationMail(dto.email, emailCode, dto.username)
 
         return { message: 'student registered' }
     }
@@ -175,32 +175,27 @@ export class StudentService {
         };
 
         //check if the previous otp sent has expired
-        const otp = await this.studentOtpRepository.findOne({ where: { otp: dto.email, expirationTime: LessThan(new Date()) } })
-        if (!otp) {
-            throw new HttpException('Previous Otp has not expired', HttpStatus.BAD_REQUEST)
-        };
+        // const otp = await this.studentOtpRepository.findOne({ where: { otp: dto.email, expirationTime: LessThan(new Date()) } })
+        // if (!otp) {
+        //     throw new HttpException('Previous Otp has not expired', HttpStatus.BAD_REQUEST)
+        // };
 
         //generate new otp
         const otpCode = await this.verificationCode();
 
         //set expiration time for otp
-        const otpTime = new Date();
-        await otpTime.setMinutes(otpTime.getMinutes() + 10)
+         const otpTime = new Date();
+         otpTime.setMinutes(otpTime.getMinutes() + 10)
 
         //save new otp to database
-        const newOtp = new StudentOtpEntity()
-        newOtp.email = dto.email;
-        newOtp.expirationTime = otpTime;
-        newOtp.otp = otpCode;
+         const newOtp = new StudentOtpEntity()
+         newOtp.email = dto.email;
+         newOtp.expirationTime = otpTime;
+         newOtp.otp = otpCode;
 
         await this.studentOtpRepository.save(newOtp)
 
-        //save the notification
-        const notification = new NotificationEntity()
-        notification.account = dto.email;
-        notification.subject = 'New otp sent to student';
-        notification.message = ``
-
+        
         //send new otp via mail
         await this.mailer.sendVerificationMail(newOtp.email, otpCode, student.name)
 
@@ -314,4 +309,39 @@ export class StudentService {
 
         return await this.signToken(student.id, student.email,student.role)
     }
+
+    // change password
+    //async changePassword(dto: ChangePasswordDto): Promise<{ message: string}> {
+        //confirm student is logged
+        //update changes
+        //save to datbase
+
+       // return
+    // }
+    //update profile
+    async updateProfile(dto: UpdateStudentDto, userId: string): Promise<{ message: string}> {
+
+        //verify student authorization
+        const student = await this.studentRepository.findOne({ where: { id: userId}})
+        if(!student) {
+            throw new HttpException('student cannot update profile', HttpStatus.NOT_FOUND)
+        }
+        
+        //make changes
+        student.password = dto.password;
+        student.email = dto.email;
+        student.name = dto.name;
+        student.surname = dto.surname;
+        student.username = dto.username
+
+        //save to database
+        await this.studentRepository.save(student)
+
+        return { message: 'Profile updated'}
+    }
+
+    //get all student
+    //async getAllStudent()
+    //get one student
+
 }

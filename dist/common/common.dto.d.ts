@@ -47,6 +47,7 @@ export declare class ResetAdminPassword {
     resetLink: string;
     password: string;
 }
-export declare class ProfilePicDto {
-    id: string;
+export declare class ChangePasswordDto {
+    oldPassword: string;
+    newPassword: string;
 }

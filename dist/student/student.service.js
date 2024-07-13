@@ -23,7 +23,6 @@ const otp_entity_1 = require("../Entity/otp.entity");
 const common_repository_1 = require("../common/common.repository");
 const mailer_service_1 = require("../Mailer/mailer.service");
 const notification_entity_1 = require("../Entity/notification.entity");
-const typeorm_2 = require("typeorm");
 const uuid_1 = require("uuid");
 const jwt_1 = require("@nestjs/jwt");
 const config_1 = require("@nestjs/config");
@@ -74,7 +73,6 @@ let StudentService = class StudentService {
         student.password = hash;
         await this.studentRepository.save(student);
         const emailCode = await this.verificationCode();
-        await this.mailer.sendVerificationMail(dto.email, emailCode, dto.username);
         const otpExpiration = new Date();
         await otpExpiration.setMinutes(otpExpiration.getMinutes() + 10);
         const otp = new otp_entity_1.StudentOtpEntity();
@@ -87,6 +85,7 @@ let StudentService = class StudentService {
         notification.subject = 'New Student Created';
         notification.message = `new student registered successfully`;
         await this.notificationRepository.save(notification);
+        await this.mailer.sendVerificationMail(dto.email, emailCode, dto.username);
         return { message: 'student registered' };
     }
     async verifyOtp(dto) {
@@ -124,23 +123,14 @@ let StudentService = class StudentService {
             throw new common_1.HttpException(`Student with ${dto.email} does not exists, plesea check the email you entered`, common_1.HttpStatus.NOT_FOUND);
         }
         ;
-        const otp = await this.studentOtpRepository.findOne({ where: { otp: dto.email, expirationTime: (0, typeorm_2.LessThan)(new Date()) } });
-        if (!otp) {
-            throw new common_1.HttpException('Previous Otp has not expired', common_1.HttpStatus.BAD_REQUEST);
-        }
-        ;
         const otpCode = await this.verificationCode();
         const otpTime = new Date();
-        await otpTime.setMinutes(otpTime.getMinutes() + 10);
+        otpTime.setMinutes(otpTime.getMinutes() + 10);
         const newOtp = new otp_entity_1.StudentOtpEntity();
         newOtp.email = dto.email;
         newOtp.expirationTime = otpTime;
         newOtp.otp = otpCode;
         await this.studentOtpRepository.save(newOtp);
-        const notification = new notification_entity_1.NotificationEntity();
-        notification.account = dto.email;
-        notification.subject = 'New otp sent to student';
-        notification.message = ``;
         await this.mailer.sendVerificationMail(newOtp.email, otpCode, student.name);
         return { message: 'new otp sent' };
     }
@@ -199,6 +189,19 @@ let StudentService = class StudentService {
         student.isLoggedIn = true;
         await this.studentRepository.save(student);
         return await this.signToken(student.id, student.email, student.role);
+    }
+    async updateProfile(dto, userId) {
+        const student = await this.studentRepository.findOne({ where: { id: userId } });
+        if (!student) {
+            throw new common_1.HttpException('student cannot update profile', common_1.HttpStatus.NOT_FOUND);
+        }
+        student.password = dto.password;
+        student.email = dto.email;
+        student.name = dto.name;
+        student.surname = dto.surname;
+        student.username = dto.username;
+        await this.studentRepository.save(student);
+        return { message: 'Profile updated' };
     }
 };
 exports.StudentService = StudentService;
