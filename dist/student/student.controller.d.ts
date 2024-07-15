@@ -1,11 +1,14 @@
 import { StudentService } from './student.service';
-import { CreateStudentDto } from './student.dto';
-import { LoginDto, ResendOtpDto, ResetPassword, ResetPasswordLinkDto, VerifyOtpDto } from 'src/common/common.dto';
+import { CreateStudentDto, UpdateStudentDto } from './student.dto';
+import { ChangePasswordDto, LoginDto, ResendOtpDto, ResetPassword, ResetPasswordLinkDto, VerifyOtpDto } from 'src/common/common.dto';
 export declare class StudentController {
     private studentService;
     constructor(studentService: StudentService);
     CreateStudent(dto: CreateStudentDto): Promise<{
         message: string;
+    }>;
+    login(dto: LoginDto): Promise<{
+        accesstoken: string;
     }>;
     VerifyOtpDto(dto: VerifyOtpDto): Promise<{
         isValid: boolean;
@@ -19,7 +22,12 @@ export declare class StudentController {
     ResetPassword(dto: ResetPassword): Promise<{
         message: string;
     }>;
-    login(dto: LoginDto): Promise<{
-        accesstoken: string;
+    updateProfile(dto: UpdateStudentDto, id: string): Promise<{
+        message: string;
     }>;
+    changePassword(id: string, dto: ChangePasswordDto): Promise<{
+        message: string;
+    }>;
+    allStudent(): Promise<import("../Entity/student.entity").StudentEntity[]>;
+    oneStudent(id: string): Promise<import("../Entity/student.entity").StudentEntity>;
 }

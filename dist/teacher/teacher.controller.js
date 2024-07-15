@@ -30,6 +30,27 @@ let TeacherController = class TeacherController {
     async resendCode(dto) {
         return await this.teacherService.resendCode(dto);
     }
+    async resetPasswordLink(dto) {
+        return await this.teacherService.resetTeacherPasswordLink(dto);
+    }
+    async resetPassword(dto) {
+        return await this.teacherService.resetTeacherPassword(dto);
+    }
+    async updateTeacher(id, dto) {
+        return await this.teacherService.updateTeacher(id, dto);
+    }
+    async login(dto) {
+        return await this.teacherService.loginTeacher(dto);
+    }
+    async changePassword(id, dto) {
+        return await this.teacherService.changeTeacherPassword(id, dto);
+    }
+    async getAll() {
+        return await this.teacherService.getTeachers();
+    }
+    async getOne(id) {
+        return await this.teacherService.getTeacher(id);
+    }
 };
 exports.TeacherController = TeacherController;
 __decorate([
@@ -53,6 +74,56 @@ __decorate([
     __metadata("design:paramtypes", [common_dto_1.resendTeacherOtpDto]),
     __metadata("design:returntype", Promise)
 ], TeacherController.prototype, "resendCode", null);
+__decorate([
+    (0, common_1.Post)('/reset-password-link'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [common_dto_1.ResetDto]),
+    __metadata("design:returntype", Promise)
+], TeacherController.prototype, "resetPasswordLink", null);
+__decorate([
+    (0, common_1.Post)('/reset-password'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [common_dto_1.resetTeacherPasswordDto]),
+    __metadata("design:returntype", Promise)
+], TeacherController.prototype, "resetPassword", null);
+__decorate([
+    (0, common_1.Put)('/update/:id'),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, teacher_dto_1.UpdateTeacherDto]),
+    __metadata("design:returntype", Promise)
+], TeacherController.prototype, "updateTeacher", null);
+__decorate([
+    (0, common_1.Post)('/login'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [common_dto_1.LoginDto]),
+    __metadata("design:returntype", Promise)
+], TeacherController.prototype, "login", null);
+__decorate([
+    (0, common_1.Patch)('/change/:id'),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, common_dto_1.ChangeApassword]),
+    __metadata("design:returntype", Promise)
+], TeacherController.prototype, "changePassword", null);
+__decorate([
+    (0, common_1.Get)('/all'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], TeacherController.prototype, "getAll", null);
+__decorate([
+    (0, common_1.Get)('/get/:id'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], TeacherController.prototype, "getOne", null);
 exports.TeacherController = TeacherController = __decorate([
     (0, common_1.Controller)('teacher'),
     __metadata("design:paramtypes", [teacher_service_1.TeacherService])

@@ -7,10 +7,11 @@ import { TeacherOtpEntity } from 'src/Entity/teacherOtp.entity';
 import { TeacherOtpRepository } from 'src/common/common.repository';
 import { TeacherRepository } from './teacher.repository';
 import { Mailer } from 'src/Mailer/mailer.service';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [TypeOrmModule.forFeature([TeacherEntity, TeacherOtpEntity])],
   controllers: [TeacherController],
-  providers: [TeacherService, TeacherOtpRepository, TeacherRepository, Mailer]
+  providers: [TeacherService, TeacherOtpRepository, TeacherRepository, Mailer, JwtService]
 })
 export class TeacherModule {}

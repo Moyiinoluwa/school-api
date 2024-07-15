@@ -10,5 +10,4 @@ export declare class UpdateStudentDto {
     name: string;
     surname: string;
     email: string;
-    password: string;
 }

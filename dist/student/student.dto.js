@@ -62,15 +62,4 @@ __decorate([
     (0, class_validator_1.IsEmail)({}, { message: 'Invalid email address' }),
     __metadata("design:type", String)
 ], UpdateStudentDto.prototype, "email", void 0);
-__decorate([
-    (0, class_validator_1.IsNotEmpty)({ message: 'Please enter your password' }),
-    (0, class_validator_1.IsStrongPassword)({
-        minLength: 8,
-        minLowercase: 1,
-        minNumbers: 1,
-        minSymbols: 1,
-        minUppercase: 1
-    }),
-    __metadata("design:type", String)
-], UpdateStudentDto.prototype, "password", void 0);
 //# sourceMappingURL=student.dto.js.map

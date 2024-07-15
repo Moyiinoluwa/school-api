@@ -15,7 +15,7 @@ const fileType = require("file-type");
 let UploadService = class UploadService {
     async uploadFile(file) {
         const extension = (0, path_1.extname)(file.originalname).toLowerCase();
-        const allowedExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.mp4', '.ogg', '.webm'];
+        const allowedExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.mp4', '.ogg', '.webm', '.docx', '.pdf', '.word'];
         const maxVideoLengthInSeconds = 120;
         const isSupportedVideoType = (mime) => {
             return mime.startsWith('video/') && ['mp4', 'ogg', 'webm'].includes(mime.split('/')[1]);
@@ -51,8 +51,18 @@ let UploadService = class UploadService {
             const fileName = (0, uuid_1.v4)() + extension;
             filePath = (0, path_1.join)('public/videos', fileName);
         }
+        else if (['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/msword'].includes(fileInfo.mime)) {
+            try {
+                await fs_1.promises.access('Public/documents');
+            }
+            catch {
+                await fs_1.promises.mkdir('Public/documents');
+            }
+            const fileName = (0, uuid_1.v4)() + extension;
+            filePath = (0, path_1.join)('Public/documents', fileName);
+        }
         else {
-            throw new common_1.BadRequestException('Only image and video files are allowed');
+            throw new common_1.BadRequestException('Only image, video, and document files are allowed');
         }
         await fs_1.promises.writeFile(filePath, file.buffer);
         return filePath.split('/').pop();

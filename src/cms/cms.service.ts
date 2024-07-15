@@ -1,35 +1,39 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { StudentRepository } from 'src/student/student.repository';
-import { StudentViewScoreDto } from './cms.dto';
 import { TeacherRepository } from 'src/teacher/teacher.repository';
 import { MessageRepository } from './cms.repository';
 import { MessageEntity } from 'src/Entity/message.entity';
-import { ChangePasswordDto } from 'src/common/common.dto';
+import { UploadService } from 'src/Helpers/upload.service';
+
 
 @Injectable()
 export class CmsService {
     constructor(@InjectRepository(StudentRepository) private readonly studentRepository: StudentRepository,
                 @InjectRepository(TeacherRepository) private readonly teacherRepository: TeacherRepository,
-                @InjectRepository(MessageRepository) private readonly messageRepository: MessageRepository
+                @InjectRepository(MessageRepository) private readonly messageRepository: MessageRepository,
+                private uploadService: UploadService
 ) {} 
 
 
     //upload student profile picture 
-    async uploadProfilePicture(id: string, filename: string, ): Promise<{ message: string}> {
-        //find student by id
-        const student = await this.studentRepository.findOne({ where: { id }})
-        if(!student) {
-            throw new HttpException('student not found', HttpStatus.NOT_FOUND)
+    async uploadProfilePicture(id: string, file: Express.Multer.File): Promise<{ message: string }> {
+        // Find student by ID
+        const student = await this.studentRepository.findOne({ where: { id } });
+        if (!student) {
+            throw new HttpException('Student not found', HttpStatus.NOT_FOUND);
         }
 
-        //update student profile
+        // Upload the file using the UploadService
+        const filename = await this.uploadService.uploadFile(file);
+
+        // Update student profile
         student.profilePicture = filename;
 
-        //save to database
+        // Save to database
         await this.studentRepository.save(student);
 
-        return { message: 'Profile picture uploaded'}
+        return { message: 'Profile picture uploaded' };
     }
 
     //view student score
@@ -103,7 +107,25 @@ export class CmsService {
     
     
     
-    //student upload answers to 
+    //student upload answers to assignment
+    async uploadAssignment(id: string, file: Express.Multer.File): Promise<{ message: string}> {
+        
+        //verify student id
+        const student = await this.studentRepository.findOne({ where: { id }})
+        if(!student) {
+            throw new BadRequestException('Student cannot upload assignment')
+        }
+
+        const filename = await this.uploadService.uploadFile(file)
+        //upload the answer
+        student.answer = filename;
+
+        //save to database
+        await this.studentRepository.save(student)
+
+        return { message: 'Answer uploaded successfully'}
+    }
+
     //student can download the assignment file
     //logout
 }

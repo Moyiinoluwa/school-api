@@ -24,6 +24,9 @@ let StudentController = class StudentController {
     async CreateStudent(dto) {
         return await this.studentService.createStudent(dto);
     }
+    async login(dto) {
+        return await this.studentService.login(dto);
+    }
     async VerifyOtpDto(dto) {
         return await this.studentService.verifyOtp(dto);
     }
@@ -36,19 +39,34 @@ let StudentController = class StudentController {
     async ResetPassword(dto) {
         return await this.studentService.ResetPassword(dto);
     }
-    async login(dto) {
-        return await this.studentService.login(dto);
+    async updateProfile(dto, id) {
+        return await this.studentService.updateProfile(dto, id);
+    }
+    async changePassword(id, dto) {
+        return await this.studentService.changePassword(id, dto);
+    }
+    async allStudent() {
+        return await this.studentService.getAll();
+    }
+    async oneStudent(id) {
+        return await this.studentService.getOneStudent(id);
     }
 };
 exports.StudentController = StudentController;
 __decorate([
     (0, common_1.Post)('/register'),
-    (0, common_1.UsePipes)(common_1.ValidationPipe),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [student_dto_1.CreateStudentDto]),
     __metadata("design:returntype", Promise)
 ], StudentController.prototype, "CreateStudent", null);
+__decorate([
+    (0, common_1.Post)('/login'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [common_dto_1.LoginDto]),
+    __metadata("design:returntype", Promise)
+], StudentController.prototype, "login", null);
 __decorate([
     (0, common_1.Post)('/verify-otp'),
     __param(0, (0, common_1.Body)()),
@@ -78,12 +96,34 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], StudentController.prototype, "ResetPassword", null);
 __decorate([
-    (0, common_1.Post)('/login'),
+    (0, common_1.Put)('/update/:id'),
     __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [common_dto_1.LoginDto]),
+    __metadata("design:paramtypes", [student_dto_1.UpdateStudentDto, String]),
     __metadata("design:returntype", Promise)
-], StudentController.prototype, "login", null);
+], StudentController.prototype, "updateProfile", null);
+__decorate([
+    (0, common_1.Put)('/change/:id'),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, common_dto_1.ChangePasswordDto]),
+    __metadata("design:returntype", Promise)
+], StudentController.prototype, "changePassword", null);
+__decorate([
+    (0, common_1.Get)('/all'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], StudentController.prototype, "allStudent", null);
+__decorate([
+    (0, common_1.Get)('/get/:id'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], StudentController.prototype, "oneStudent", null);
 exports.StudentController = StudentController = __decorate([
     (0, common_1.Controller)('student'),
     __metadata("design:paramtypes", [student_service_1.StudentService])

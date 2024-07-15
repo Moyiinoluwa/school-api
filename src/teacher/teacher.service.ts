@@ -1,23 +1,29 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt'
 import { TeacherRepository } from './teacher.repository';
-import { CreateTeacherDto } from './teacher.dto';
+import { CreateTeacherDto, UpdateTeacherDto } from './teacher.dto';
 import { TeacherEntity } from 'src/Entity/teacher.entity';
 import { customAlphabet } from 'nanoid';
 import { TeacherOtpRepository } from 'src/common/common.repository';
 import { Mailer } from 'src/Mailer/mailer.service';
 import { TeacherOtpEntity } from 'src/Entity/teacherOtp.entity';
-import { ResetDto, resendTeacherOtpDto, resetTeacherPasswordDto, verifyTeacherOtpDto } from 'src/common/common.dto';
+import { ChangeApassword, LoginDto, ResetDto, resendTeacherOtpDto, resetTeacherPasswordDto, verifyTeacherOtpDto } from 'src/common/common.dto';
 import { LessThan } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 
 
 @Injectable()
 export class TeacherService {
     constructor(@InjectRepository(TeacherRepository) private readonly teacherRepository: TeacherRepository,
                 @InjectRepository(TeacherOtpRepository) private readonly teacherOtpRepository: TeacherOtpRepository,
-                private readonly mailer: Mailer
+                private readonly mailer: Mailer,
+                private jwt: JwtService,
+                private configService: ConfigService
+                
+
                 
 ) {}
 
@@ -26,12 +32,34 @@ async hashPassword (password: any): Promise< string > {
     return await bcrypt.hash(password, 12)
 }
 
+//compare password
+async comparePassword (password: any, userpassword: any): Promise<boolean> {
+    return await bcrypt.compare(password, userpassword)
+}
+
 //create verification code
 async createCode () {
     const generateCode = customAlphabet('0123456789', 6)
     return generateCode();
 }
 
+//Generate access token
+async signToken(id: string, email: string, role: string) {
+    const payload = {
+        sub: id,
+        email,
+        role
+    };
+
+    const secret = this.configService.get('SECRET_KEY');
+    const token = await this.jwt.signAsync(payload, {
+        expiresIn: this.configService.get('EXPIRESIN'),
+        secret: secret
+    });
+
+    return { accessToken: token}
+
+}
 //Create Teacher's account
 async createTeacher(dto: CreateTeacherDto): Promise<{ message: string}> {
 
@@ -64,7 +92,7 @@ async createTeacher(dto: CreateTeacherDto): Promise<{ message: string}> {
 
     //set expiration time for verification code
     const codeTime = new Date();
-    await codeTime.setMinutes(codeTime.getMinutes() + 10 )
+     codeTime.setMinutes(codeTime.getMinutes() + 10 )
 
     //save verification code to database
     const teacherOtp = new TeacherOtpEntity()
@@ -103,6 +131,7 @@ async verifyCode(dto: verifyTeacherOtpDto): Promise<{ isValid: boolean}> {
     } else {
         teacher.isVerified = true;
         teacher.isRegistered = true
+        teacher.isLoggedIn = true;
     }
 
     return { isValid: true }
@@ -128,7 +157,7 @@ async verifyCode(dto: verifyTeacherOtpDto): Promise<{ isValid: boolean}> {
 
         //set exipration time
         const codeWatch = new Date();
-        await codeWatch.setMinutes(codeWatch.getMinutes() + 10)
+         codeWatch.setMinutes(codeWatch.getMinutes() + 10)
 
         //save code to database
         const codeAgain = new TeacherOtpEntity();
@@ -198,6 +227,105 @@ async verifyCode(dto: verifyTeacherOtpDto): Promise<{ isValid: boolean}> {
      }
 
      //login
+     async loginTeacher(dto: LoginDto) {
+        //checked if the teacher is registered
+        const teacher = await this.teacherRepository.findOne({ where: {email: dto.email}})
+        if(!teacher) {
+            throw new BadRequestException('teacher cannot login')
+        }
+
+        // compare the password
+        const access = await this.comparePassword(dto.password, teacher.password)
+        if(!access) {
+            teacher.loginCount =+ 1;
+        }
+
+        //check if student has exceeded the login attempts
+        if(teacher.loginCount >= 5 ) {
+            teacher.isLocked = true;
+            teacher.locked_until = new Date(Date.now() + 2 * 60 * 60 * 1000); //lock for two hours
+            throw new BadRequestException('Invalid password, account locked for two hours')
+        }
+
+         //if the password matches  the reset the login count and unlock the account
+         teacher.loginCount = 0;
+         teacher.isLoggedIn = true;
+
+         //if the student has not reached the number of login limit, calculate number of attempted left
+
+        //check if the teacher is verified
+        if(!teacher.isVerified) {
+            throw new BadRequestException('Account is not verified, please request for verification code.')
+        }
+
+        //update teacher profile
+        await this.teacherRepository.save(teacher)
+
+        return await this.signToken(teacher.id, teacher.email, teacher.role)
+     }
+
+     //update account
+     async updateTeacher(id: string, dto: UpdateTeacherDto): Promise<{ message: string}> {
+        //verify teacher by id
+        const teacher = await this.teacherRepository.findOne({ where: { id}})
+        if(!teacher) {
+            throw new BadRequestException('Teacher cannot update account')
+        }
+
+        //update changes
+        teacher.email = dto.email;
+        teacher.fullname = dto.fullname;
+        teacher.qualification = dto.qualification;
+        teacher.username = dto.username
+
+        //save to database
+        await this.teacherRepository.save(teacher)
+
+        return { message: 'teacher profile updated'}
+     }
+
+     //change password
+     async changeTeacherPassword(id: string, dto: ChangeApassword): Promise<{ message: string}> {
+        const teacher = await this.teacherRepository.findOne({ where: {id}}) 
+        if(!teacher) {
+            throw new BadRequestException('Teacher cannot change password')
+        }
+
+        //compare password
+        const validPassword = await this.comparePassword(dto.oldPassword, teacher.password)
+        if(!validPassword) {
+            throw new BadRequestException('The password you entered is incorrect')
+        }
+
+        //if password is valid, proceed to change password
+        //hash new password
+        const hash = await this.hashPassword(dto.newPassword)
+
+        //update profile
+        teacher.password = hash;
+
+        //save to database
+        await this.teacherRepository.save(teacher)
+
+        return { message: 'Password changed!'}
+     }
+
+     //get all teachers
+     async getTeachers(): Promise<TeacherEntity[]> {
+        const teacher = await this.teacherRepository.find()
+        return teacher;
+     }
+
+     //get a teacher profile
+     async getTeacher(id: string) {
+        //verify by id
+        const teacher = await this.teacherRepository.findOne({ where: {id}})
+        if(!teacher) {
+            throw new BadRequestException('Cannot find teacher')
+        } else {
+            return teacher;
+        }
+     }
 }
 
  

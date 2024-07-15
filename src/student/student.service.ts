@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { StudentRepository } from './student.repository';
 import { CreateStudentDto, UpdateStudentDto } from './student.dto';
@@ -9,7 +9,7 @@ import { StudentOtpEntity } from 'src/Entity/otp.entity';
 import { NotificationRepository, StudentOtpRepository } from 'src/common/common.repository';
 import { Mailer } from 'src/Mailer/mailer.service';
 import { NotificationEntity } from 'src/Entity/notification.entity';
-import { LoginDto, ResendOtpDto, ResetPassword, ResetPasswordLinkDto, VerifyOtpDto } from 'src/common/common.dto';
+import { ChangePasswordDto, LoginDto, ResendOtpDto, ResetPassword, ResetPasswordLinkDto, VerifyOtpDto } from 'src/common/common.dto';
 import { LessThan } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { JwtService } from '@nestjs/jwt';
@@ -34,7 +34,7 @@ export class StudentService {
     }
 
     //login password
-    async comparePassword(password, userpassword): Promise<boolean> {
+    async comparePassword(password: any, userpassword: any): Promise<boolean> {
         return await bcrypt.compare(password, userpassword)
     }
 
@@ -156,12 +156,6 @@ export class StudentService {
             await this.studentRepository.save(student)
         }
 
-        //generate access token
-        // const accessToken = await this.signToken(
-        //     student.id,
-        //     student.email,
-        //     student.role
-        // )
         return { isValid: true }
     }
 
@@ -311,24 +305,42 @@ export class StudentService {
     }
 
     // change password
-    //async changePassword(dto: ChangePasswordDto): Promise<{ message: string}> {
-        //confirm student is logged
-        //update changes
-        //save to datbase
+    
+  async changePassword(id: string, dto: ChangePasswordDto): Promise<{ message: string }> {
+    // Verify student by id
+    const student = await this.studentRepository.findOne({ where: { id } });
+    if (!student) {
+       throw new BadRequestException('Student cannot change password');
+    }
 
-       // return
-    // }
+    // Compare the password
+    const isPasswordValid = await this.comparePassword(dto.oldPassword, student.password);
+    if (!isPasswordValid) {
+      throw new BadRequestException('Current password is incorrect');
+    }
+
+    // Student entered the new password
+    const hashedNewPassword = await bcrypt.hash(dto.newPassword, 10);
+
+    // Update changes
+    student.password = hashedNewPassword;
+
+    // Save to database
+    await this.studentRepository.save(student);
+
+    return { message: 'Password changed successfully' };
+  }
+
     //update profile
-    async updateProfile(dto: UpdateStudentDto, userId: string): Promise<{ message: string}> {
+    async updateProfile(dto: UpdateStudentDto, id: string): Promise<{ message: string}> {
 
         //verify student authorization
-        const student = await this.studentRepository.findOne({ where: { id: userId}})
+        const student = await this.studentRepository.findOne({ where: { id }})
         if(!student) {
             throw new HttpException('student cannot update profile', HttpStatus.NOT_FOUND)
         }
         
         //make changes
-        student.password = dto.password;
         student.email = dto.email;
         student.name = dto.name;
         student.surname = dto.surname;
@@ -341,7 +353,23 @@ export class StudentService {
     }
 
     //get all student
-    //async getAllStudent()
+    async getAll(): Promise<StudentEntity[]> {
+        const student = await this.studentRepository.find()
+        return  student;
+    }
+    
     //get one student
+    async getOneStudent(id: string) {
+        const student = await this.studentRepository.findOne({ where: {id}})
+        if(!student) {
+            throw new BadRequestException('student not found')
+        } else {
+            return student;
+        }
 
+    }
+
+    //problems
+    //resend otp
+    //change password
 }

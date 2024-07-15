@@ -16,6 +16,9 @@ export interface ITeacher {
     isResetLinkSent: boolean;
     resetPasswordLinkExipration: Date;
     role: Role;
+    loginCount: number;
+    isLocked: boolean;
+    locked_until: Date;
 }
 export declare class TeacherEntity implements ITeacher {
     id: string;
@@ -34,4 +37,7 @@ export declare class TeacherEntity implements ITeacher {
     isResetLinkSent: boolean;
     resetPasswordLinkExipration: Date;
     role: Role;
+    loginCount: number;
+    isLocked: boolean;
+    locked_until: Date;
 }

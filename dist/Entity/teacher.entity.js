@@ -79,6 +79,18 @@ __decorate([
     (0, typeorm_1.Column)({ nullable: false, type: 'enum', enum: general_enum_1.Role, default: general_enum_1.Role.TEACHER }),
     __metadata("design:type", String)
 ], TeacherEntity.prototype, "role", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: false, default: 0 }),
+    __metadata("design:type", Number)
+], TeacherEntity.prototype, "loginCount", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", Boolean)
+], TeacherEntity.prototype, "isLocked", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", Date)
+], TeacherEntity.prototype, "locked_until", void 0);
 exports.TeacherEntity = TeacherEntity = __decorate([
     (0, typeorm_1.Entity)({ name: 'teacher' })
 ], TeacherEntity);

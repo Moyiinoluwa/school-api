@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CreateTeacherDto = void 0;
+exports.UpdateTeacherDto = exports.CreateTeacherDto = void 0;
 const class_validator_1 = require("class-validator");
 class CreateTeacherDto {
 }
@@ -42,4 +42,24 @@ __decorate([
     }),
     __metadata("design:type", String)
 ], CreateTeacherDto.prototype, "password", void 0);
+class UpdateTeacherDto {
+}
+exports.UpdateTeacherDto = UpdateTeacherDto;
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], UpdateTeacherDto.prototype, "fullname", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], UpdateTeacherDto.prototype, "username", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], UpdateTeacherDto.prototype, "qualification", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsEmail)(),
+    __metadata("design:type", String)
+], UpdateTeacherDto.prototype, "email", void 0);
 //# sourceMappingURL=teacher.dto.js.map

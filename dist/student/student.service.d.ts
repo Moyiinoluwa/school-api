@@ -1,8 +1,9 @@
 import { StudentRepository } from './student.repository';
 import { CreateStudentDto, UpdateStudentDto } from './student.dto';
+import { StudentEntity } from 'src/Entity/student.entity';
 import { NotificationRepository, StudentOtpRepository } from 'src/common/common.repository';
 import { Mailer } from 'src/Mailer/mailer.service';
-import { LoginDto, ResendOtpDto, ResetPassword, ResetPasswordLinkDto, VerifyOtpDto } from 'src/common/common.dto';
+import { ChangePasswordDto, LoginDto, ResendOtpDto, ResetPassword, ResetPasswordLinkDto, VerifyOtpDto } from 'src/common/common.dto';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 export declare class StudentService {
@@ -37,7 +38,12 @@ export declare class StudentService {
     login(dto: LoginDto): Promise<{
         accesstoken: string;
     }>;
-    updateProfile(dto: UpdateStudentDto, userId: string): Promise<{
+    changePassword(id: string, dto: ChangePasswordDto): Promise<{
         message: string;
     }>;
+    updateProfile(dto: UpdateStudentDto, id: string): Promise<{
+        message: string;
+    }>;
+    getAll(): Promise<StudentEntity[]>;
+    getOneStudent(id: string): Promise<StudentEntity>;
 }

@@ -16,6 +16,7 @@ const teacherOtp_entity_1 = require("../Entity/teacherOtp.entity");
 const common_repository_1 = require("../common/common.repository");
 const teacher_repository_1 = require("./teacher.repository");
 const mailer_service_1 = require("../Mailer/mailer.service");
+const jwt_1 = require("@nestjs/jwt");
 let TeacherModule = class TeacherModule {
 };
 exports.TeacherModule = TeacherModule;
@@ -23,7 +24,7 @@ exports.TeacherModule = TeacherModule = __decorate([
     (0, common_1.Module)({
         imports: [typeorm_1.TypeOrmModule.forFeature([teacher_entity_1.TeacherEntity, teacherOtp_entity_1.TeacherOtpEntity])],
         controllers: [teacher_controller_1.TeacherController],
-        providers: [teacher_service_1.TeacherService, common_repository_1.TeacherOtpRepository, teacher_repository_1.TeacherRepository, mailer_service_1.Mailer]
+        providers: [teacher_service_1.TeacherService, common_repository_1.TeacherOtpRepository, teacher_repository_1.TeacherRepository, mailer_service_1.Mailer, jwt_1.JwtService]
     })
 ], TeacherModule);
 //# sourceMappingURL=teacher.module.js.map

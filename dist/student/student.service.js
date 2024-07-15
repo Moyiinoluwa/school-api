@@ -190,18 +190,44 @@ let StudentService = class StudentService {
         await this.studentRepository.save(student);
         return await this.signToken(student.id, student.email, student.role);
     }
-    async updateProfile(dto, userId) {
-        const student = await this.studentRepository.findOne({ where: { id: userId } });
+    async changePassword(id, dto) {
+        const student = await this.studentRepository.findOne({ where: { id } });
+        if (!student) {
+            throw new common_1.BadRequestException('Student cannot change password');
+        }
+        const isPasswordValid = await this.comparePassword(dto.oldPassword, student.password);
+        if (!isPasswordValid) {
+            throw new common_1.BadRequestException('Current password is incorrect');
+        }
+        const hashedNewPassword = await bcrypt.hash(dto.newPassword, 10);
+        student.password = hashedNewPassword;
+        await this.studentRepository.save(student);
+        return { message: 'Password changed successfully' };
+    }
+    async updateProfile(dto, id) {
+        const student = await this.studentRepository.findOne({ where: { id } });
         if (!student) {
             throw new common_1.HttpException('student cannot update profile', common_1.HttpStatus.NOT_FOUND);
         }
-        student.password = dto.password;
         student.email = dto.email;
         student.name = dto.name;
         student.surname = dto.surname;
         student.username = dto.username;
         await this.studentRepository.save(student);
         return { message: 'Profile updated' };
+    }
+    async getAll() {
+        const student = await this.studentRepository.find();
+        return student;
+    }
+    async getOneStudent(id) {
+        const student = await this.studentRepository.findOne({ where: { id } });
+        if (!student) {
+            throw new common_1.BadRequestException('student not found');
+        }
+        else {
+            return student;
+        }
     }
 };
 exports.StudentService = StudentService;

@@ -51,3 +51,7 @@ export declare class ChangePasswordDto {
     oldPassword: string;
     newPassword: string;
 }
+export declare class ChangeApassword {
+    oldPassword: string;
+    newPassword: string;
+}

@@ -22,5 +22,7 @@ export declare class StudentEntity extends BaseEntity {
     role: Role;
     profilePicture: string;
     score: number;
+    answer: string;
+    assignment: string;
     studentOtp: StudentEntity;
 }

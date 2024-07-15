@@ -101,6 +101,14 @@ __decorate([
     __metadata("design:type", Number)
 ], StudentEntity.prototype, "score", void 0);
 __decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", String)
+], StudentEntity.prototype, "answer", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", String)
+], StudentEntity.prototype, "assignment", void 0);
+__decorate([
     (0, typeorm_1.OneToOne)(() => otp_entity_1.StudentOtpEntity, (studentOtp) => studentOtp.student),
     __metadata("design:type", StudentEntity)
 ], StudentEntity.prototype, "studentOtp", void 0);

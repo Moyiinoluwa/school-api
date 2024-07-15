@@ -24,18 +24,38 @@ const mailer_service_1 = require("../Mailer/mailer.service");
 const teacherOtp_entity_1 = require("../Entity/teacherOtp.entity");
 const typeorm_2 = require("typeorm");
 const uuid_1 = require("uuid");
+const jwt_1 = require("@nestjs/jwt");
+const config_1 = require("@nestjs/config");
 let TeacherService = class TeacherService {
-    constructor(teacherRepository, teacherOtpRepository, mailer) {
+    constructor(teacherRepository, teacherOtpRepository, mailer, jwt, configService) {
         this.teacherRepository = teacherRepository;
         this.teacherOtpRepository = teacherOtpRepository;
         this.mailer = mailer;
+        this.jwt = jwt;
+        this.configService = configService;
     }
     async hashPassword(password) {
         return await bcrypt.hash(password, 12);
     }
+    async comparePassword(password, userpassword) {
+        return await bcrypt.compare(password, userpassword);
+    }
     async createCode() {
         const generateCode = (0, nanoid_1.customAlphabet)('0123456789', 6);
         return generateCode();
+    }
+    async signToken(id, email, role) {
+        const payload = {
+            sub: id,
+            email,
+            role
+        };
+        const secret = this.configService.get('SECRET_KEY');
+        const token = await this.jwt.signAsync(payload, {
+            expiresIn: this.configService.get('EXPIRESIN'),
+            secret: secret
+        });
+        return { accessToken: token };
     }
     async createTeacher(dto) {
         const teacher = await this.teacherRepository.findOne({ where: { email: dto.email } });
@@ -54,7 +74,7 @@ let TeacherService = class TeacherService {
         const otpCode = await this.createCode();
         await this.mailer.sendVerificationMail(dto.email, otpCode, dto.username);
         const codeTime = new Date();
-        await codeTime.setMinutes(codeTime.getMinutes() + 10);
+        codeTime.setMinutes(codeTime.getMinutes() + 10);
         const teacherOtp = new teacherOtp_entity_1.TeacherOtpEntity();
         teacherOtp.email = dto.email;
         teacherOtp.otp = otpCode;
@@ -82,6 +102,7 @@ let TeacherService = class TeacherService {
         else {
             teacher.isVerified = true;
             teacher.isRegistered = true;
+            teacher.isLoggedIn = true;
         }
         return { isValid: true };
     }
@@ -97,7 +118,7 @@ let TeacherService = class TeacherService {
         }
         const newTeacherCode = await this.createCode();
         const codeWatch = new Date();
-        await codeWatch.setMinutes(codeWatch.getMinutes() + 10);
+        codeWatch.setMinutes(codeWatch.getMinutes() + 10);
         const codeAgain = new teacherOtp_entity_1.TeacherOtpEntity();
         codeAgain.email = dto.email;
         codeAgain.expirationTime = codeWatch;
@@ -135,6 +156,67 @@ let TeacherService = class TeacherService {
         teacher.password = hash;
         return { message: 'password reset successfully' };
     }
+    async loginTeacher(dto) {
+        const teacher = await this.teacherRepository.findOne({ where: { email: dto.email } });
+        if (!teacher) {
+            throw new common_1.BadRequestException('teacher cannot login');
+        }
+        const access = await this.comparePassword(dto.password, teacher.password);
+        if (!access) {
+            teacher.loginCount = +1;
+        }
+        if (teacher.loginCount >= 5) {
+            teacher.isLocked = true;
+            teacher.locked_until = new Date(Date.now() + 2 * 60 * 60 * 1000);
+            throw new common_1.BadRequestException('Invalid password, account locked for two hours');
+        }
+        teacher.loginCount = 0;
+        teacher.isLoggedIn = true;
+        if (!teacher.isVerified) {
+            throw new common_1.BadRequestException('Account is not verified, please request for verification code.');
+        }
+        await this.teacherRepository.save(teacher);
+        return await this.signToken(teacher.id, teacher.email, teacher.role);
+    }
+    async updateTeacher(id, dto) {
+        const teacher = await this.teacherRepository.findOne({ where: { id } });
+        if (!teacher) {
+            throw new common_1.BadRequestException('Teacher cannot update account');
+        }
+        teacher.email = dto.email;
+        teacher.fullname = dto.fullname;
+        teacher.qualification = dto.qualification;
+        teacher.username = dto.username;
+        await this.teacherRepository.save(teacher);
+        return { message: 'teacher profile updated' };
+    }
+    async changeTeacherPassword(id, dto) {
+        const teacher = await this.teacherRepository.findOne({ where: { id } });
+        if (!teacher) {
+            throw new common_1.BadRequestException('Teacher cannot change password');
+        }
+        const validPassword = await this.comparePassword(dto.oldPassword, teacher.password);
+        if (!validPassword) {
+            throw new common_1.BadRequestException('The password you entered is incorrect');
+        }
+        const hash = await this.hashPassword(dto.newPassword);
+        teacher.password = hash;
+        await this.teacherRepository.save(teacher);
+        return { message: 'Password changed!' };
+    }
+    async getTeachers() {
+        const teacher = await this.teacherRepository.find();
+        return teacher;
+    }
+    async getTeacher(id) {
+        const teacher = await this.teacherRepository.findOne({ where: { id } });
+        if (!teacher) {
+            throw new common_1.BadRequestException('Cannot find teacher');
+        }
+        else {
+            return teacher;
+        }
+    }
 };
 exports.TeacherService = TeacherService;
 exports.TeacherService = TeacherService = __decorate([
@@ -143,6 +225,8 @@ exports.TeacherService = TeacherService = __decorate([
     __param(1, (0, typeorm_1.InjectRepository)(common_repository_1.TeacherOtpRepository)),
     __metadata("design:paramtypes", [teacher_repository_1.TeacherRepository,
         common_repository_1.TeacherOtpRepository,
-        mailer_service_1.Mailer])
+        mailer_service_1.Mailer,
+        jwt_1.JwtService,
+        config_1.ConfigService])
 ], TeacherService);
 //# sourceMappingURL=teacher.service.js.map

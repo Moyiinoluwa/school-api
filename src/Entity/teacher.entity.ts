@@ -18,6 +18,9 @@ export interface ITeacher {
     isResetLinkSent: boolean
     resetPasswordLinkExipration: Date
     role: Role
+    loginCount: number
+    isLocked: boolean
+    locked_until: Date;
 }
     @Entity({ name: 'teacher'})
 export class TeacherEntity implements ITeacher {
@@ -68,4 +71,13 @@ export class TeacherEntity implements ITeacher {
 
     @Column({ nullable: false, type: 'enum', enum: Role, default: Role.TEACHER})
     role: Role;
+
+    @Column({ nullable: false, default: 0})
+    loginCount: number;
+
+    @Column({ nullable: true})
+    isLocked: boolean;
+
+    @Column({ nullable: true })
+    locked_until: Date;
 }

@@ -24,4 +24,20 @@ export class CreateTeacherDto {
         minUppercase: 1
     })
     password: string;
+
+}
+
+export class UpdateTeacherDto {
+    @IsNotEmpty()
+    fullname: string;
+
+    @IsNotEmpty()
+    username: string;
+
+    @IsNotEmpty( )
+    qualification: string;
+
+    @IsNotEmpty()
+    @IsEmail()
+    email: string;
 }

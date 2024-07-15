@@ -6,19 +6,15 @@ import { Role } from 'src/Enum/general.enum';
 
 @Controller('cms')
 export class CmsController {
-    constructor(private cmsService: CmsService,
-        private uploadService: UploadService
-    ) { }
+    constructor(private cmsService: CmsService ) {}
 
     //upload profile picture
-   // @Role(Role.STUDENT, Role.ADMIN, Role.TEACHER)
-    @Post('/profile-picture/:id')
-    @UseInterceptors(FileInterceptor('file'))
-    async uploadProfilePicture(@Param('id') id: string, @UploadedFile() file: Express.Multer.File) {
-        const filename = await this.uploadService.uploadFile(file)
-        await this.cmsService.uploadProfilePicture(id, filename)
-        return { message: 'profile picture uploaded' }
-    }
+   @Post('/profile-picture/:id')
+   @UseInterceptors(FileInterceptor('file'))
+   async uploadProfilePicture(
+       @Param('id') id: string,  @UploadedFile() file: Express.Multer.File ) {
+       return await this.cmsService.uploadProfilePicture(id, file);
+   }
 
     //view student score
    // @Role(Role.STUDENT)
@@ -41,5 +37,13 @@ export class CmsController {
         return await this.cmsService.studentToStudent(sender_id, reciever_id, message)
     }
 
+    //student upload answer to assignment
+     @Post('/upload-assignment/:id')
+    @UseInterceptors(FileInterceptor('file'))
+     async uploadAnswer(@Param('id') id: string, @UploadedFile() file: Express.Multer.File): Promise<{ message: string}> {
+        return await this.cmsService.uploadAssignment(id, file)
+    }
+
     
+
 }

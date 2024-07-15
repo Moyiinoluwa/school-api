@@ -159,7 +159,8 @@ export class ResetAdminPassword {
 
  //change password
  export class ChangePasswordDto {
-    @IsNotEmpty()
+    @IsString()
+    @IsNotEmpty({ message: 'current password cannot be empty'})
     @IsStrongPassword({
         minLength: 8,
         minLowercase: 1,
@@ -170,7 +171,7 @@ export class ResetAdminPassword {
     oldPassword: string
 
     @IsString()
-    @IsNotEmpty()
+    @IsNotEmpty({message: 'new password cannot be empty' })
     @IsStrongPassword({
         minLength: 8,
         minLowercase: 1,
@@ -184,4 +185,28 @@ export class ResetAdminPassword {
     // //@match('newPassword', { message:'ConfirmPassword does not match the newPassword'})
     // confirmPassword: string
  }
+
+    export class ChangeApassword {
+        @IsString()
+    @IsNotEmpty({ message: 'current password cannot be empty'})
+    @IsStrongPassword({
+        minLength: 8,
+        minLowercase: 1,
+        minUppercase: 1,
+        minSymbols: 1,
+        minNumbers: 1
+    })
+    oldPassword: string
+
+    @IsString()
+    @IsNotEmpty({message: 'new password cannot be empty' })
+    @IsStrongPassword({
+        minLength: 8,
+        minLowercase: 1,
+        minUppercase: 1,
+        minSymbols: 1,
+        minNumbers: 1
+    })
+    newPassword: string
+    }
 

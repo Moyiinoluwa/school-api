@@ -39,13 +39,4 @@ export class UpdateStudentDto {
     @IsEmail({}, { message: 'Invalid email address' })
     email: string;
 
-    @IsNotEmpty({ message: 'Please enter your password' })
-     @IsStrongPassword({
-        minLength: 8,
-        minLowercase: 1,
-        minNumbers: 1,
-        minSymbols: 1,
-        minUppercase: 1
-     })
-    password: string;  
 }

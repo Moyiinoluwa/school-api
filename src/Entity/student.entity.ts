@@ -67,6 +67,12 @@ export class StudentEntity extends BaseEntity{
     @Column({ nullable: true })
     score: number
 
+    @Column({ nullable: true})
+    answer: string
+
+    @Column({ nullable: true})
+    assignment: string
+    
     @OneToOne(() => StudentOtpEntity, (studentOtp) => studentOtp.student )
     studentOtp: StudentEntity
 }
