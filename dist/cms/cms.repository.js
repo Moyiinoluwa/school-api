@@ -12,9 +12,10 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.MessageRepository = void 0;
+exports.AssignmentRepository = exports.MessageRepository = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
+const assignment_entity_1 = require("../Entity/assignment.entity");
 const message_entity_1 = require("../Entity/message.entity");
 const typeorm_2 = require("typeorm");
 let MessageRepository = class MessageRepository extends typeorm_2.Repository {
@@ -29,4 +30,16 @@ exports.MessageRepository = MessageRepository = __decorate([
     __param(0, (0, typeorm_1.InjectRepository)(message_entity_1.MessageEntity)),
     __metadata("design:paramtypes", [MessageRepository])
 ], MessageRepository);
+let AssignmentRepository = class AssignmentRepository extends typeorm_2.Repository {
+    constructor(assignmentRepository) {
+        super(assignmentRepository.target, assignmentRepository.manager, assignmentRepository.queryRunner);
+        this.assignmentRepository = assignmentRepository;
+    }
+};
+exports.AssignmentRepository = AssignmentRepository;
+exports.AssignmentRepository = AssignmentRepository = __decorate([
+    (0, common_1.Injectable)(),
+    __param(0, (0, typeorm_1.InjectRepository)(assignment_entity_1.AssignmentEntity)),
+    __metadata("design:paramtypes", [AssignmentRepository])
+], AssignmentRepository);
 //# sourceMappingURL=cms.repository.js.map

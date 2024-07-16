@@ -91,6 +91,10 @@ __decorate([
     (0, typeorm_1.Column)({ nullable: true }),
     __metadata("design:type", Date)
 ], TeacherEntity.prototype, "locked_until", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", String)
+], TeacherEntity.prototype, "profilePicture", void 0);
 exports.TeacherEntity = TeacherEntity = __decorate([
     (0, typeorm_1.Entity)({ name: 'teacher' })
 ], TeacherEntity);

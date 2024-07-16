@@ -99,12 +99,12 @@ let TeacherService = class TeacherService {
         if (teacher.email !== code.email) {
             throw new common_1.HttpException('the teacher is not registered', common_1.HttpStatus.NOT_FOUND);
         }
-        else {
-            teacher.isVerified = true;
-            teacher.isRegistered = true;
-            teacher.isLoggedIn = true;
-        }
-        return { isValid: true };
+        teacher.isVerified = true;
+        teacher.isRegistered = true;
+        teacher.isLoggedIn = true;
+        teachOtp.verified = true;
+        await this.teacherRepository.save(teacher);
+        return { message: 'Otp verified' };
     }
     async resendCode(dto) {
         const teacher = await this.teacherRepository.findOne({ where: { email: dto.email } });

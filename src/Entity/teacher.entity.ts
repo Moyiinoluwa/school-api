@@ -21,6 +21,7 @@ export interface ITeacher {
     loginCount: number
     isLocked: boolean
     locked_until: Date;
+    profilePicture: string
 }
     @Entity({ name: 'teacher'})
 export class TeacherEntity implements ITeacher {
@@ -80,4 +81,7 @@ export class TeacherEntity implements ITeacher {
 
     @Column({ nullable: true })
     locked_until: Date;
+
+    @Column({ nullable: true})
+    profilePicture: string;
 }

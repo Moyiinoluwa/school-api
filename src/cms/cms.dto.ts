@@ -1,12 +1,7 @@
-import { IsNotEmpty, IsString } from "class-validator";
+import { IsNotEmpty } from "class-validator";
 
 //student check scores
-export class StudentViewScoreDto {
+ export class StudentScoreDto {
     @IsNotEmpty()
-    @IsString()
-    id: string
-
-    @IsNotEmpty()
-    @IsString()
-    subject: string
-}
+    score: number
+ }

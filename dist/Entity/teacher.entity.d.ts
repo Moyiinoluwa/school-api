@@ -19,6 +19,7 @@ export interface ITeacher {
     loginCount: number;
     isLocked: boolean;
     locked_until: Date;
+    profilePicture: string;
 }
 export declare class TeacherEntity implements ITeacher {
     id: string;
@@ -40,4 +41,5 @@ export declare class TeacherEntity implements ITeacher {
     loginCount: number;
     isLocked: boolean;
     locked_until: Date;
+    profilePicture: string;
 }

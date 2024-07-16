@@ -23,7 +23,7 @@ export declare class TeacherService {
         message: string;
     }>;
     verifyCode(dto: verifyTeacherOtpDto): Promise<{
-        isValid: boolean;
+        message: string;
     }>;
     resendCode(dto: resendTeacherOtpDto): Promise<{
         message: string;
