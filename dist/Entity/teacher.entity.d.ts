@@ -1,20 +1,23 @@
 import { Role } from "src/Enum/general.enum";
+import { StudentEntity } from "./student.entity";
+import { AssignmentEntity } from "./assignment.entity";
+import { MessageEntity } from "./message.entity";
 export interface ITeacher {
     fullname: string;
     username: string;
     qualification: string;
     email: string;
     password: string;
-    id: string;
+    id: number;
     createdAt: Date;
-    isActive: true;
+    isActive: boolean;
     isRegistered: boolean;
     isLoggedIn: boolean;
     isLoggedOut: boolean;
     isVerified: boolean;
     resetLink: string;
     isResetLinkSent: boolean;
-    resetPasswordLinkExipration: Date;
+    resetPasswordLinkExpiration: Date;
     role: Role;
     loginCount: number;
     isLocked: boolean;
@@ -22,24 +25,28 @@ export interface ITeacher {
     profilePicture: string;
 }
 export declare class TeacherEntity implements ITeacher {
-    id: string;
+    id: number;
     fullname: string;
     username: string;
     qualification: string;
     email: string;
     password: string;
     createdAt: Date;
-    isActive: true;
+    isActive: boolean;
     isVerified: boolean;
     isRegistered: boolean;
     isLoggedIn: boolean;
     isLoggedOut: boolean;
     resetLink: string;
     isResetLinkSent: boolean;
-    resetPasswordLinkExipration: Date;
+    resetPasswordLinkExpiration: Date;
     role: Role;
     loginCount: number;
     isLocked: boolean;
     locked_until: Date;
     profilePicture: string;
+    student: StudentEntity[];
+    assignment: AssignmentEntity[];
+    sentMessages: MessageEntity[];
+    receivedMessages: MessageEntity[];
 }

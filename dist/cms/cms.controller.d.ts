@@ -4,26 +4,35 @@ import { StudentScoreDto } from './cms.dto';
 export declare class CmsController {
     private cmsService;
     constructor(cmsService: CmsService);
-    uploadProfilePicture(id: string, file: Express.Multer.File): Promise<{
+    uploadProfilePicture(id: number, file: Express.Multer.File): Promise<{
         message: string;
     }>;
-    viewStudentScore(id: string, subject: string): Promise<number>;
-    sendTeacherMessage(sender_id: string, reciever_id: string, message: string): Promise<{
+    viewStudentScore(id: number, subject: string): Promise<number>;
+    sendTeacherMessage(sender_id: number, reciever_id: number, message: string): Promise<{
         message: string;
     }>;
-    sendStudentMessage(sender_id: string, reciever_id: string, message: string): Promise<{
+    sendStudentMessage(sender_id: number, reciever_id: number, message: string): Promise<{
         message: string;
     }>;
-    uploadAnswer(id: string, file: Express.Multer.File): Promise<{
+    uploadAnswer(id: number, file: Express.Multer.File): Promise<{
         message: string;
     }>;
-    uploadTeacherPicture(id: string, file: Express.Multer.File): Promise<{
+    uploadTeacherPicture(id: number, file: Express.Multer.File): Promise<{
         message: string;
     }>;
-    sendAssignment(teacher_id: string, student_id: string, file: Express.Multer.File): Promise<{
+    sendAssignment(teacher_id: number, student_id: number, file: Express.Multer.File): Promise<{
         message: string;
     }>;
-    setScore(teacher_id: string, student_id: string, assign_id: string, dto: StudentScoreDto): Promise<{
+    setScore(teacher_id: number, student_id: number, assign_id: number, dto: StudentScoreDto): Promise<{
+        message: string;
+    }>;
+    editScore(studentId: number, teacherId: number, assignmentId: number, dto: StudentScoreDto): Promise<{
+        message: string;
+    }>;
+    messageStudent(teacherId: number, studentId: number, message: string): Promise<{
+        message: string;
+    }>;
+    teacher(teacherId: number, teaacherId: number, message: string): Promise<{
         message: string;
     }>;
 }

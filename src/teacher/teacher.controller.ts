@@ -33,7 +33,7 @@ export class TeacherController {
     }
 
     @Put('/update/:id')
-    async updateTeacher(@Param('id') id: string, @Body() dto: UpdateTeacherDto) {
+    async updateTeacher(@Param('id') id: number, @Body() dto: UpdateTeacherDto) {
         return await this.teacherService.updateTeacher(id, dto)
     }
 
@@ -43,7 +43,7 @@ export class TeacherController {
     }
 
     @Patch('/change/:id')
-    async changePassword(@Param('id') id: string, @Body() dto: ChangeApassword) {
+    async changePassword(@Param('id') id: number, @Body() dto: ChangeApassword) {
         return await this.teacherService.changeTeacherPassword(id, dto)
     }
 
@@ -53,7 +53,7 @@ export class TeacherController {
     }
 
     @Get('/get/:id')
-    async getOne(@Param('id') id: string) {
+    async getOne(@Param('id') id: number) {
         return await this.teacherService.getTeacher(id)
     }
 }

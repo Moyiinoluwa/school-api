@@ -1,19 +1,22 @@
 import { IsNotEmpty, IsString } from "class-validator";
-import { CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { StudentEntity } from "./student.entity";
+import { TeacherEntity } from "./teacher.entity";
 
 export interface IAssignment {
-    studentId: string;
-    teacherid: string;
+    studentId: number;
+    teacherId: number;
     subject: string;
     score: number;
-    id: string
+    id: number;
     date: Date;
+    assignment: string;
 }
 
 @Entity({name: 'Assignment'})
 export class AssignmentEntity implements IAssignment {
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
+    @PrimaryGeneratedColumn()
+    id: number;
 
     @IsNotEmpty()
     @IsString()
@@ -24,12 +27,24 @@ export class AssignmentEntity implements IAssignment {
 
     @IsNotEmpty()
     @IsString()
-    studentId: string;
+    assignment: string;
 
     @IsNotEmpty()
     @IsString()
-    teacherid: string;
+    studentId: number;
+
+    @IsNotEmpty()
+    @IsString()
+    teacherId: number;
 
     @CreateDateColumn({nullable: false})
     date: Date;
+
+    //many student can have the same assignment
+    @ManyToOne(() => StudentEntity, student => student.assignment)
+    student: StudentEntity[];
+
+    //many teacher can send assignment
+    @ManyToOne(() => TeacherEntity, teacher => teacher.assignment)
+    teacher: TeacherEntity[];
 }

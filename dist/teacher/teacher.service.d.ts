@@ -16,7 +16,7 @@ export declare class TeacherService {
     hashPassword(password: any): Promise<string>;
     comparePassword(password: any, userpassword: any): Promise<boolean>;
     createCode(): Promise<string>;
-    signToken(id: string, email: string, role: string): Promise<{
+    signToken(id: number, email: string, role: string): Promise<{
         accessToken: string;
     }>;
     createTeacher(dto: CreateTeacherDto): Promise<{
@@ -37,12 +37,12 @@ export declare class TeacherService {
     loginTeacher(dto: LoginDto): Promise<{
         accessToken: string;
     }>;
-    updateTeacher(id: string, dto: UpdateTeacherDto): Promise<{
+    updateTeacher(id: number, dto: UpdateTeacherDto): Promise<{
         message: string;
     }>;
-    changeTeacherPassword(id: string, dto: ChangeApassword): Promise<{
+    changeTeacherPassword(id: number, dto: ChangeApassword): Promise<{
         message: string;
     }>;
     getTeachers(): Promise<TeacherEntity[]>;
-    getTeacher(id: string): Promise<TeacherEntity>;
+    getTeacher(id: number): Promise<TeacherEntity>;
 }

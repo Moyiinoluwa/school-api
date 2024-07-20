@@ -17,7 +17,7 @@ export declare class StudentService {
     hashPassword(password: any): Promise<string>;
     comparePassword(password: any, userpassword: any): Promise<boolean>;
     verificationCode(): Promise<string>;
-    signToken(id: string, email: string, role: string): Promise<{
+    signToken(id: number, email: string, role: string): Promise<{
         accesstoken: string;
     }>;
     createStudent(dto: CreateStudentDto): Promise<{
@@ -38,12 +38,12 @@ export declare class StudentService {
     login(dto: LoginDto): Promise<{
         accesstoken: string;
     }>;
-    changePassword(id: string, dto: ChangePasswordDto): Promise<{
+    changePassword(id: number, dto: ChangePasswordDto): Promise<{
         message: string;
     }>;
-    updateProfile(dto: UpdateStudentDto, id: string): Promise<{
+    updateProfile(dto: UpdateStudentDto, id: number): Promise<{
         message: string;
     }>;
     getAll(): Promise<StudentEntity[]>;
-    getOneStudent(id: string): Promise<StudentEntity>;
+    getOneStudent(id: number): Promise<StudentEntity>;
 }

@@ -1,6 +1,6 @@
 import { Role } from "src/Enum/general.enum";
 export interface IAdmin {
-    id: string;
+    id: number;
     fullname: string;
     email: string;
     password: string;
@@ -15,7 +15,7 @@ export interface IAdmin {
     role: Role;
 }
 export declare class AdminEntity implements IAdmin {
-    id: string;
+    id: number;
     fullname: string;
     email: string;
     password: string;

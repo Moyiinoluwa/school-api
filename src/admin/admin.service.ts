@@ -191,5 +191,12 @@ export class AdminService {
         return { message: 'password reset'}
     }
 
+    //LOGIN
+    //change password
+    //update profile
+    //delete profile
+    //get all admin
+    //get an admin
+    //logout
 }
 

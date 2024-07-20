@@ -45,25 +45,25 @@ export class StudentController {
 
     //update profile
     @Put('/update/:id')
-    async updateProfile(@Body() dto: UpdateStudentDto, @Param('id') id: string) {
+    async updateProfile(@Body() dto: UpdateStudentDto, @Param('id') id: number) {
         return await this.studentService.updateProfile(dto, id)
     }
     
     //Change password
     @Put('/change/:id')
-    async changePassword(@Param('id') id: string, @Body() dto: ChangePasswordDto) {
+    async changePassword(@Param('id') id: number, @Body() dto: ChangePasswordDto) {
         return await this.studentService.changePassword(id, dto)
     }
 
     //Get all student
-    @Get('/all')
+    @Get('/get')
     async allStudent() {
         return await this.studentService.getAll()
     }
 
     //Get one student
     @Get('/get/:id')
-    async oneStudent(@Param('id') id: string) {
+    async oneStudent(@Param('id') id: number) {
         return await this.studentService.getOneStudent(id)
     }
 }

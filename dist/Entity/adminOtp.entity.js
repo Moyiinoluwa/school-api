@@ -15,8 +15,8 @@ let AdminOtpEnitity = class AdminOtpEnitity {
 };
 exports.AdminOtpEnitity = AdminOtpEnitity;
 __decorate([
-    (0, typeorm_1.PrimaryGeneratedColumn)('uuid'),
-    __metadata("design:type", String)
+    (0, typeorm_1.PrimaryGeneratedColumn)(),
+    __metadata("design:type", Number)
 ], AdminOtpEnitity.prototype, "id", void 0);
 __decorate([
     (0, typeorm_1.Column)({ nullable: false }),

@@ -19,15 +19,15 @@ export declare class TeacherController {
     resetPassword(dto: resetTeacherPasswordDto): Promise<{
         message: string;
     }>;
-    updateTeacher(id: string, dto: UpdateTeacherDto): Promise<{
+    updateTeacher(id: number, dto: UpdateTeacherDto): Promise<{
         message: string;
     }>;
     login(dto: LoginDto): Promise<{
         accessToken: string;
     }>;
-    changePassword(id: string, dto: ChangeApassword): Promise<{
+    changePassword(id: number, dto: ChangeApassword): Promise<{
         message: string;
     }>;
     getAll(): Promise<import("../Entity/teacher.entity").TeacherEntity[]>;
-    getOne(id: string): Promise<import("../Entity/teacher.entity").TeacherEntity>;
+    getOne(id: number): Promise<import("../Entity/teacher.entity").TeacherEntity>;
 }

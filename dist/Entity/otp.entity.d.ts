@@ -1,6 +1,6 @@
 import { StudentEntity } from "./student.entity";
 export interface IStudentOtp {
-    id: string;
+    id: number;
     otp: string;
     email: string;
     verified: boolean;
@@ -8,7 +8,7 @@ export interface IStudentOtp {
     expirationTime: Date;
 }
 export declare class StudentOtpEntity implements IStudentOtp {
-    id: string;
+    id: number;
     otp: string;
     email: string;
     verified: boolean;

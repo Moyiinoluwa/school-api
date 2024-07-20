@@ -2,7 +2,7 @@ import { Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryGenerate
 import { StudentEntity } from "./student.entity";
 
 export interface IStudentOtp {
-    id: string;
+    id: number;
     otp: string;
     email: string;
     verified: boolean;
@@ -10,10 +10,10 @@ export interface IStudentOtp {
     expirationTime: Date;
 }
 
-@Entity({ name: 'otp'})
+@Entity({ name: 'studentOtp'})
 export class StudentOtpEntity implements IStudentOtp{
-    @PrimaryGeneratedColumn('uuid')
-    id: string
+    @PrimaryGeneratedColumn()
+    id: number;
 
     @Column()
     otp: string
@@ -31,6 +31,6 @@ export class StudentOtpEntity implements IStudentOtp{
     date: Date;
      
     @OneToOne(() => StudentEntity, (student) => student.studentOtp)
-    @JoinColumn({ name: 'student_id'})
+    @JoinColumn()
     student: StudentEntity
 }

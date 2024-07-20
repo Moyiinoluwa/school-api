@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 export interface IAdminOtp {
-    id: string
+    id: number;
     otp: string;
     email: string;
     expirationTime: Date;
@@ -11,8 +11,8 @@ export interface IAdminOtp {
 
 @Entity({ name: 'adminotp'})
     export class AdminOtpEnitity implements IAdminOtp {
-        @PrimaryGeneratedColumn('uuid')
-        id: string;
+        @PrimaryGeneratedColumn()
+        id: number;
 
         @Column({ nullable: false })
         otp: string;

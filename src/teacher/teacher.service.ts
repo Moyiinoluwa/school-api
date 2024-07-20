@@ -44,7 +44,7 @@ export class TeacherService {
     }
 
     //Generate access token
-    async signToken(id: string, email: string, role: string) {
+    async signToken(id: number, email: string, role: string) {
         const payload = {
             sub: id,
             email,
@@ -87,9 +87,6 @@ export class TeacherService {
         //set verification code
         const otpCode = await this.createCode();
 
-        //send verification code to teacher via mail
-        await this.mailer.sendVerificationMail(dto.email, otpCode, dto.username);
-
         //set expiration time for verification code
         const codeTime = new Date();
         codeTime.setMinutes(codeTime.getMinutes() + 10)
@@ -102,6 +99,9 @@ export class TeacherService {
         teacherOtp.createdAt = new Date();
 
         await this.teacherOtpRepository.save(teacherOtp)
+
+        //send verification code to teacher via mail
+        await this.mailer.sendVerificationMail(dto.email, otpCode, dto.username);
 
         return { message: 'teacher registered' }
     }
@@ -201,7 +201,7 @@ export class TeacherService {
         //save to database
         teacher.resetLink = link;
         teacher.isResetLinkSent = true;
-        teacher.resetPasswordLinkExipration = linkTime
+        //teacher.resetPasswordLinkExipration = linkTime
 
         await this.teacherRepository.save(teacher)
 
@@ -270,7 +270,7 @@ export class TeacherService {
     }
 
     //update account
-    async updateTeacher(id: string, dto: UpdateTeacherDto): Promise<{ message: string }> {
+    async updateTeacher(id: number, dto: UpdateTeacherDto): Promise<{ message: string }> {
         //verify teacher by id
         const teacher = await this.teacherRepository.findOne({ where: { id } })
         if (!teacher) {
@@ -290,7 +290,7 @@ export class TeacherService {
     }
 
     //change password
-    async changeTeacherPassword(id: string, dto: ChangeApassword): Promise<{ message: string }> {
+    async changeTeacherPassword(id: number, dto: ChangeApassword): Promise<{ message: string }> {
         const teacher = await this.teacherRepository.findOne({ where: { id } })
         if (!teacher) {
             throw new BadRequestException('Teacher cannot change password')
@@ -322,7 +322,7 @@ export class TeacherService {
     }
 
     //get a teacher profile
-    async getTeacher(id: string) {
+    async getTeacher(id: number) {
         //verify by id
         const teacher = await this.teacherRepository.findOne({ where: { id } })
         if (!teacher) {

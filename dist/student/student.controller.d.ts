@@ -22,12 +22,12 @@ export declare class StudentController {
     ResetPassword(dto: ResetPassword): Promise<{
         message: string;
     }>;
-    updateProfile(dto: UpdateStudentDto, id: string): Promise<{
+    updateProfile(dto: UpdateStudentDto, id: number): Promise<{
         message: string;
     }>;
-    changePassword(id: string, dto: ChangePasswordDto): Promise<{
+    changePassword(id: number, dto: ChangePasswordDto): Promise<{
         message: string;
     }>;
     allStudent(): Promise<import("../Entity/student.entity").StudentEntity[]>;
-    oneStudent(id: string): Promise<import("../Entity/student.entity").StudentEntity>;
+    oneStudent(id: number): Promise<import("../Entity/student.entity").StudentEntity>;
 }

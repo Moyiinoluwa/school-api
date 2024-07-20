@@ -15,8 +15,8 @@ let TeacherOtpEntity = class TeacherOtpEntity {
 };
 exports.TeacherOtpEntity = TeacherOtpEntity;
 __decorate([
-    (0, typeorm_1.PrimaryGeneratedColumn)('uuid'),
-    __metadata("design:type", String)
+    (0, typeorm_1.PrimaryGeneratedColumn)(),
+    __metadata("design:type", Number)
 ], TeacherOtpEntity.prototype, "id", void 0);
 __decorate([
     (0, typeorm_1.Column)(),

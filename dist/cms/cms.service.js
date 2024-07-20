@@ -20,6 +20,7 @@ const teacher_repository_1 = require("../teacher/teacher.repository");
 const cms_repository_1 = require("./cms.repository");
 const message_entity_1 = require("../Entity/message.entity");
 const upload_service_1 = require("../Helpers/upload.service");
+const assignment_entity_1 = require("../Entity/assignment.entity");
 let CmsService = class CmsService {
     constructor(studentRepository, teacherRepository, messageRepository, assignmentRepository, uploadService) {
         this.studentRepository = studentRepository;
@@ -59,8 +60,8 @@ let CmsService = class CmsService {
             throw new common_1.HttpException('teacher not permitted to text student', common_1.HttpStatus.NOT_FOUND);
         }
         const text = new message_entity_1.MessageEntity();
-        text.sender_id = student.username;
-        text.reciever_id = teacher.username;
+        text.senderId = student.id;
+        text.receiverId = teacher.id;
         text.date = new Date();
         text.message = message;
         await this.messageRepository.save(text);
@@ -76,8 +77,8 @@ let CmsService = class CmsService {
             throw new common_1.HttpException('student cannot recieve message', common_1.HttpStatus.NOT_FOUND);
         }
         const gist = new message_entity_1.MessageEntity();
-        gist.reciever_id = aStudent.username;
-        gist.sender_id = student.username;
+        gist.receiverId = aStudent.id;
+        gist.senderId = student.id;
         gist.date = new Date();
         gist.message = message;
         await this.messageRepository.save(gist);
@@ -112,9 +113,14 @@ let CmsService = class CmsService {
         if (!student) {
             throw new common_1.BadRequestException('student cannot download assignment from teacher');
         }
-        const assigment = await this.uploadService.uploadFile(file);
-        student.assignment = assigment;
-        await this.studentRepository.save(student);
+        const assignmentFile = await this.uploadService.uploadFile(file);
+        const assignment = new assignment_entity_1.AssignmentEntity();
+        assignment.studentId = student.id;
+        assignment.teacherId = teacher.id;
+        assignment.subject = 'Subject Name';
+        assignment.assignment = assignmentFile;
+        assignment.date = new Date();
+        await this.assignmentRepository.save(assignment);
         return { message: 'Assignment sent to student' };
     }
     async studentScore(teacher_id, student_id, assign_id, dto) {
@@ -130,8 +136,61 @@ let CmsService = class CmsService {
         if (!assigment) {
             throw new common_1.BadRequestException('Cannot find assignment');
         }
-        student.score = dto.score;
+        assigment.score = dto.score;
+        assigment.subject = dto.subject;
+        await this.assignmentRepository.save(assigment);
         return { message: 'Student score recorded' };
+    }
+    async editScore(studentId, teacherid, assigmentId, dto) {
+        const student = await this.studentRepository.findOne({ where: { id: studentId } });
+        if (!student) {
+            throw new common_1.BadRequestException('Cannot edit student score ');
+        }
+        const teacher = await this.teacherRepository.findOne({ where: { id: teacherid } });
+        if (!teacher) {
+            throw new common_1.BadRequestException('Teacher cannot edit student score');
+        }
+        const assign = await this.assignmentRepository.findOne({ where: { id: assigmentId } });
+        if (!assign) {
+            throw new common_1.BadRequestException('cannot locate this assignment');
+        }
+        student.score = dto.score;
+        await this.assignmentRepository.save(assign);
+        return { message: 'Student score edited' };
+    }
+    async messageStudent(teacherId, studentId, message) {
+        const teacher = await this.teacherRepository.findOne({ where: { id: teacherId } });
+        if (!teacher) {
+            throw new common_1.BadRequestException('teacher cannot message student');
+        }
+        const student = await this.studentRepository.findOne({ where: { id: studentId } });
+        if (!student) {
+            throw new common_1.BadRequestException('Student cannot receive message from teacher');
+        }
+        const msg = new message_entity_1.MessageEntity();
+        msg.senderId = teacher.id;
+        msg.receiverId = student.id;
+        msg.message = message;
+        msg.date = new Date();
+        await this.messageRepository.save(msg);
+        return { message: 'Sent to student' };
+    }
+    async teacherToTeacher(teacherId, teaacherId, message) {
+        const teacher = await this.teacherRepository.findOne({ where: { id: teacherId } });
+        if (!teacher) {
+            throw new common_1.BadRequestException('Not teacher');
+        }
+        const teaccher = await this.teacherRepository.findOne({ where: { id: teaacherId } });
+        if (!teaccher) {
+            throw new common_1.BadRequestException('teacher not allowed to recieve message');
+        }
+        const msgg = new message_entity_1.MessageEntity();
+        msgg.senderId = teacherId;
+        msgg.receiverId = teaacherId;
+        msgg.message = message;
+        msgg.date = new Date();
+        await this.messageRepository.save(msgg);
+        return { message: 'message sent to teacher' };
     }
 };
 exports.CmsService = CmsService;

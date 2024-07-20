@@ -3,7 +3,7 @@ import { Role } from "src/Enum/general.enum";
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
 
  export interface IAdmin {
-    id: string
+    id: number;
     fullname: string;
     email: string;
     password: string;
@@ -22,8 +22,8 @@ import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeor
 @Entity({ name: 'admin'})
  export class AdminEntity implements IAdmin {
 
-    @PrimaryGeneratedColumn('uuid')
-    id: string
+    @PrimaryGeneratedColumn()
+    id: number;
 
     @Column({ nullable: false })
     fullname: string;

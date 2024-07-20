@@ -1,5 +1,5 @@
 export interface IAdminOtp {
-    id: string;
+    id: number;
     otp: string;
     email: string;
     expirationTime: Date;
@@ -7,7 +7,7 @@ export interface IAdminOtp {
     verified: boolean;
 }
 export declare class AdminOtpEnitity implements IAdminOtp {
-    id: string;
+    id: number;
     otp: string;
     email: string;
     expirationTime: Date;

@@ -1,7 +1,10 @@
 import { Role } from "src/Enum/general.enum";
 import { BaseEntity } from "typeorm";
+import { AssignmentEntity } from "./assignment.entity";
+import { TeacherEntity } from "./teacher.entity";
+import { MessageEntity } from "./message.entity";
 export declare class StudentEntity extends BaseEntity {
-    id: string;
+    id: number;
     username: string;
     surname: string;
     name: string;
@@ -23,6 +26,9 @@ export declare class StudentEntity extends BaseEntity {
     profilePicture: string;
     score: number;
     answer: string;
-    assignment: string;
-    studentOtp: StudentEntity;
+    studentOtp: StudentEntity[];
+    assignment: AssignmentEntity[];
+    teacher: TeacherEntity[];
+    senders: MessageEntity[];
+    receivers: MessageEntity[];
 }

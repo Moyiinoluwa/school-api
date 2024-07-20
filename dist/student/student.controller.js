@@ -100,7 +100,7 @@ __decorate([
     __param(0, (0, common_1.Body)()),
     __param(1, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [student_dto_1.UpdateStudentDto, String]),
+    __metadata("design:paramtypes", [student_dto_1.UpdateStudentDto, Number]),
     __metadata("design:returntype", Promise)
 ], StudentController.prototype, "updateProfile", null);
 __decorate([
@@ -108,11 +108,11 @@ __decorate([
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, common_dto_1.ChangePasswordDto]),
+    __metadata("design:paramtypes", [Number, common_dto_1.ChangePasswordDto]),
     __metadata("design:returntype", Promise)
 ], StudentController.prototype, "changePassword", null);
 __decorate([
-    (0, common_1.Get)('/all'),
+    (0, common_1.Get)('/get'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
@@ -121,7 +121,7 @@ __decorate([
     (0, common_1.Get)('/get/:id'),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
 ], StudentController.prototype, "oneStudent", null);
 exports.StudentController = StudentController = __decorate([

@@ -4,4 +4,7 @@ import { IsNotEmpty } from "class-validator";
  export class StudentScoreDto {
     @IsNotEmpty()
     score: number
+
+    @IsNotEmpty()
+    subject: string
  }

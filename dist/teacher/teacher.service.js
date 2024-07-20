@@ -72,7 +72,6 @@ let TeacherService = class TeacherService {
         newTeacher.password = hash;
         await this.teacherRepository.save(newTeacher);
         const otpCode = await this.createCode();
-        await this.mailer.sendVerificationMail(dto.email, otpCode, dto.username);
         const codeTime = new Date();
         codeTime.setMinutes(codeTime.getMinutes() + 10);
         const teacherOtp = new teacherOtp_entity_1.TeacherOtpEntity();
@@ -81,6 +80,7 @@ let TeacherService = class TeacherService {
         teacherOtp.expirationTime = codeTime;
         teacherOtp.createdAt = new Date();
         await this.teacherOtpRepository.save(teacherOtp);
+        await this.mailer.sendVerificationMail(dto.email, otpCode, dto.username);
         return { message: 'teacher registered' };
     }
     async verifyCode(dto) {
@@ -139,7 +139,6 @@ let TeacherService = class TeacherService {
         linkTime.setMinutes(linkTime.getMinutes() + 10);
         teacher.resetLink = link;
         teacher.isResetLinkSent = true;
-        teacher.resetPasswordLinkExipration = linkTime;
         await this.teacherRepository.save(teacher);
         await this.mailer.resetPasswordMail(dto.email, link, teacher.username);
         return { message: 'reset link sent' };

@@ -93,7 +93,7 @@ __decorate([
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, teacher_dto_1.UpdateTeacherDto]),
+    __metadata("design:paramtypes", [Number, teacher_dto_1.UpdateTeacherDto]),
     __metadata("design:returntype", Promise)
 ], TeacherController.prototype, "updateTeacher", null);
 __decorate([
@@ -108,7 +108,7 @@ __decorate([
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, common_dto_1.ChangeApassword]),
+    __metadata("design:paramtypes", [Number, common_dto_1.ChangeApassword]),
     __metadata("design:returntype", Promise)
 ], TeacherController.prototype, "changePassword", null);
 __decorate([
@@ -121,7 +121,7 @@ __decorate([
     (0, common_1.Get)('/get/:id'),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
 ], TeacherController.prototype, "getOne", null);
 exports.TeacherController = TeacherController = __decorate([

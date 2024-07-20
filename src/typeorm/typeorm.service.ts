@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { AdminEntity } from 'src/Entity/admin.entity';
 import { AdminOtpEnitity } from 'src/Entity/adminOtp.entity';
+import { AssignmentEntity } from 'src/Entity/assignment.entity';
 import { MessageEntity } from 'src/Entity/message.entity';
 import { NotificationEntity } from 'src/Entity/notification.entity';
 import { StudentOtpEntity } from 'src/Entity/otp.entity';
@@ -29,7 +30,8 @@ export class TypeormService {
                 TeacherOtpEntity, 
                 AdminEntity,
                 AdminOtpEnitity,
-                MessageEntity
+                MessageEntity,
+                AssignmentEntity
             ],
             synchronize: true
         }

@@ -16,8 +16,8 @@ let StudentOtpEntity = class StudentOtpEntity {
 };
 exports.StudentOtpEntity = StudentOtpEntity;
 __decorate([
-    (0, typeorm_1.PrimaryGeneratedColumn)('uuid'),
-    __metadata("design:type", String)
+    (0, typeorm_1.PrimaryGeneratedColumn)(),
+    __metadata("design:type", Number)
 ], StudentOtpEntity.prototype, "id", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
@@ -41,10 +41,10 @@ __decorate([
 ], StudentOtpEntity.prototype, "date", void 0);
 __decorate([
     (0, typeorm_1.OneToOne)(() => student_entity_1.StudentEntity, (student) => student.studentOtp),
-    (0, typeorm_1.JoinColumn)({ name: 'student_id' }),
+    (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", student_entity_1.StudentEntity)
 ], StudentOtpEntity.prototype, "student", void 0);
 exports.StudentOtpEntity = StudentOtpEntity = __decorate([
-    (0, typeorm_1.Entity)({ name: 'otp' })
+    (0, typeorm_1.Entity)({ name: 'studentOtp' })
 ], StudentOtpEntity);
 //# sourceMappingURL=otp.entity.js.map

@@ -18,4 +18,8 @@ __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", Number)
 ], StudentScoreDto.prototype, "score", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], StudentScoreDto.prototype, "subject", void 0);
 //# sourceMappingURL=cms.dto.js.map

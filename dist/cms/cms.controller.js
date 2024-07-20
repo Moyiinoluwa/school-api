@@ -45,6 +45,15 @@ let CmsController = class CmsController {
     async setScore(teacher_id, student_id, assign_id, dto) {
         return await this.cmsService.studentScore(teacher_id, student_id, assign_id, dto);
     }
+    async editScore(studentId, teacherId, assignmentId, dto) {
+        return await this.cmsService.editScore(studentId, teacherId, assignmentId, dto);
+    }
+    async messageStudent(teacherId, studentId, message) {
+        return await this.cmsService.messageStudent(teacherId, studentId, message);
+    }
+    async teacher(teacherId, teaacherId, message) {
+        return await this.cmsService.teacherToTeacher(teacherId, teaacherId, message);
+    }
 };
 exports.CmsController = CmsController;
 __decorate([
@@ -53,7 +62,7 @@ __decorate([
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.UploadedFile)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:paramtypes", [Number, Object]),
     __metadata("design:returntype", Promise)
 ], CmsController.prototype, "uploadProfilePicture", null);
 __decorate([
@@ -61,7 +70,7 @@ __decorate([
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Query)('subject')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String]),
+    __metadata("design:paramtypes", [Number, String]),
     __metadata("design:returntype", Promise)
 ], CmsController.prototype, "viewStudentScore", null);
 __decorate([
@@ -70,7 +79,7 @@ __decorate([
     __param(1, (0, common_1.Param)('reciever_id')),
     __param(2, (0, common_1.Body)('message')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String, String]),
+    __metadata("design:paramtypes", [Number, Number, String]),
     __metadata("design:returntype", Promise)
 ], CmsController.prototype, "sendTeacherMessage", null);
 __decorate([
@@ -79,16 +88,16 @@ __decorate([
     __param(1, (0, common_1.Param)('reciever_id')),
     __param(2, (0, common_1.Body)('message')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String, String]),
+    __metadata("design:paramtypes", [Number, Number, String]),
     __metadata("design:returntype", Promise)
 ], CmsController.prototype, "sendStudentMessage", null);
 __decorate([
-    (0, common_1.Post)('/upload-assignment/:id'),
+    (0, common_1.Post)('/upload-answer/:id'),
     (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('file')),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.UploadedFile)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:paramtypes", [Number, Object]),
     __metadata("design:returntype", Promise)
 ], CmsController.prototype, "uploadAnswer", null);
 __decorate([
@@ -97,7 +106,7 @@ __decorate([
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.UploadedFile)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:paramtypes", [Number, Object]),
     __metadata("design:returntype", Promise)
 ], CmsController.prototype, "uploadTeacherPicture", null);
 __decorate([
@@ -107,19 +116,47 @@ __decorate([
     __param(1, (0, common_1.Param)('student_id')),
     __param(2, (0, common_1.UploadedFile)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String, Object]),
+    __metadata("design:paramtypes", [Number, Number, Object]),
     __metadata("design:returntype", Promise)
 ], CmsController.prototype, "sendAssignment", null);
 __decorate([
-    (0, common_1.Post)('/set-score/:teacher_id/:student-id'),
+    (0, common_1.Post)('/set/:teacher_id/:student-id'),
     __param(0, (0, common_1.Param)('teacher_id')),
     __param(1, (0, common_1.Param)('student_id')),
     __param(2, (0, common_1.Param)('assign_id')),
     __param(3, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String, String, cms_dto_1.StudentScoreDto]),
+    __metadata("design:paramtypes", [Number, Number, Number, cms_dto_1.StudentScoreDto]),
     __metadata("design:returntype", Promise)
 ], CmsController.prototype, "setScore", null);
+__decorate([
+    (0, common_1.Patch)('/edit/:studentId/:teacherid/:assignmentId'),
+    __param(0, (0, common_1.Param)('studentId')),
+    __param(1, (0, common_1.Param)('teacherId')),
+    __param(2, (0, common_1.Param)('assignmentId')),
+    __param(3, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, Number, Number, cms_dto_1.StudentScoreDto]),
+    __metadata("design:returntype", Promise)
+], CmsController.prototype, "editScore", null);
+__decorate([
+    (0, common_1.Post)('/send/:teacherId/:stuentId'),
+    __param(0, (0, common_1.Param)('teacherId')),
+    __param(1, (0, common_1.Param)('studentId')),
+    __param(2, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, Number, String]),
+    __metadata("design:returntype", Promise)
+], CmsController.prototype, "messageStudent", null);
+__decorate([
+    (0, common_1.Post)('/send-teacher/:teacherid/:teacherId'),
+    __param(0, (0, common_1.Param)('teacherId')),
+    __param(1, (0, common_1.Param)('teaacherId')),
+    __param(2, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, Number, String]),
+    __metadata("design:returntype", Promise)
+], CmsController.prototype, "teacher", null);
 exports.CmsController = CmsController = __decorate([
     (0, common_1.Controller)('cms'),
     __metadata("design:paramtypes", [cms_service_1.CmsService])

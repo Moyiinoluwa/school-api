@@ -11,26 +11,35 @@ export declare class CmsService {
     private readonly assignmentRepository;
     private uploadService;
     constructor(studentRepository: StudentRepository, teacherRepository: TeacherRepository, messageRepository: MessageRepository, assignmentRepository: AssignmentRepository, uploadService: UploadService);
-    uploadProfilePicture(id: string, file: Express.Multer.File): Promise<{
+    uploadProfilePicture(id: number, file: Express.Multer.File): Promise<{
         message: string;
     }>;
-    viewStudentScore(id: string, subject: string): Promise<number>;
-    messageTeacher(sender_id: string, reciever_id: string, message: string): Promise<{
+    viewStudentScore(id: number, subject: string): Promise<number>;
+    messageTeacher(sender_id: number, reciever_id: number, message: string): Promise<{
         message: string;
     }>;
-    studentToStudent(sender_id: string, reciever_id: string, message: string): Promise<{
+    studentToStudent(sender_id: number, reciever_id: number, message: string): Promise<{
         message: string;
     }>;
-    uploadAnswer(id: string, file: Express.Multer.File): Promise<{
+    uploadAnswer(id: number, file: Express.Multer.File): Promise<{
         message: string;
     }>;
-    uploadTeacherPicture(id: string, file: Express.Multer.File): Promise<{
+    uploadTeacherPicture(id: number, file: Express.Multer.File): Promise<{
         message: string;
     }>;
-    uploadAssignment(teacher_id: string, student_id: string, file: Express.Multer.File): Promise<{
+    uploadAssignment(teacher_id: number, student_id: number, file: Express.Multer.File): Promise<{
         message: string;
     }>;
-    studentScore(teacher_id: string, student_id: string, assign_id: string, dto: StudentScoreDto): Promise<{
+    studentScore(teacher_id: number, student_id: number, assign_id: number, dto: StudentScoreDto): Promise<{
+        message: string;
+    }>;
+    editScore(studentId: number, teacherid: number, assigmentId: number, dto: StudentScoreDto): Promise<{
+        message: string;
+    }>;
+    messageStudent(teacherId: number, studentId: number, message: string): Promise<{
+        message: string;
+    }>;
+    teacherToTeacher(teacherId: number, teaacherId: number, message: string): Promise<{
         message: string;
     }>;
 }

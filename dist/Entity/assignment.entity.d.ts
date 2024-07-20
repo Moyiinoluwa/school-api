@@ -1,16 +1,22 @@
+import { StudentEntity } from "./student.entity";
+import { TeacherEntity } from "./teacher.entity";
 export interface IAssignment {
-    studentId: string;
-    teacherid: string;
+    studentId: number;
+    teacherId: number;
     subject: string;
     score: number;
-    id: string;
+    id: number;
     date: Date;
+    assignment: string;
 }
 export declare class AssignmentEntity implements IAssignment {
-    id: string;
+    id: number;
     subject: string;
     score: number;
-    studentId: string;
-    teacherid: string;
+    assignment: string;
+    studentId: number;
+    teacherId: number;
     date: Date;
+    student: StudentEntity[];
+    teacher: TeacherEntity[];
 }

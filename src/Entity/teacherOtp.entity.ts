@@ -3,7 +3,7 @@ import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 export interface IteacherOtp {
     otp: string;
     email: string;
-    id: string;
+    id: number;
     verified: boolean;
     expirationTime: Date;
     createdAt: Date
@@ -11,8 +11,8 @@ export interface IteacherOtp {
 
 @Entity({ name: 'teacherOtp'})
 export class TeacherOtpEntity implements IteacherOtp {
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
+    @PrimaryGeneratedColumn()
+    id: number;
 
     @Column()
     otp: string;

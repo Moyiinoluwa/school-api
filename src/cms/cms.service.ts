@@ -5,8 +5,8 @@ import { TeacherRepository } from 'src/teacher/teacher.repository';
 import { AssignmentRepository, MessageRepository } from './cms.repository';
 import { MessageEntity } from 'src/Entity/message.entity';
 import { UploadService } from 'src/Helpers/upload.service';
-import { UpdateStudentDto } from 'src/student/student.dto';
 import { StudentScoreDto } from './cms.dto';
+import { AssignmentEntity } from 'src/Entity/assignment.entity';
 
 
 @Injectable()
@@ -18,9 +18,10 @@ export class CmsService {
         private uploadService: UploadService
     ) { }
 
+    //STUDENT
 
     //Upload student profile picture 
-    async uploadProfilePicture(id: string, file: Express.Multer.File): Promise<{ message: string }> {
+    async uploadProfilePicture(id: number, file: Express.Multer.File): Promise<{ message: string }> {
         // Find student by ID
         const student = await this.studentRepository.findOne({ where: { id } });
         if (!student) {
@@ -40,7 +41,7 @@ export class CmsService {
     }
 
     //view student score
-    async viewStudentScore(id: string, subject: string): Promise<number> {
+    async viewStudentScore(id: number, subject: string): Promise<number> {
         //verify student by id
         const student = await this.studentRepository.findOne({ where: { id } })
         if (!student) {
@@ -57,7 +58,7 @@ export class CmsService {
     }
 
     //Student can see the list of teachers and message them
-    async messageTeacher(sender_id: string, reciever_id: string, message: string): Promise<{ message: string }> {
+    async messageTeacher(sender_id: number, reciever_id: number, message: string): Promise<{ message: string }> {
         //verify student by id
         const student = await this.studentRepository.findOne({ where: { id: sender_id } })
         if (!student) {
@@ -71,8 +72,8 @@ export class CmsService {
         }
         //student create a message and save to database
         const text = new MessageEntity()
-        text.sender_id = student.username;
-        text.reciever_id = teacher.username;
+        text.senderId = student.id
+        text.receiverId = teacher.id;
         text.date = new Date();
         text.message = message;
 
@@ -82,7 +83,7 @@ export class CmsService {
     }
 
     //Student can message each other
-    async studentToStudent(sender_id: string, reciever_id: string, message: string): Promise<{ message: string }> {
+    async studentToStudent(sender_id: number, reciever_id: number, message: string): Promise<{ message: string }> {
 
         //verify sender authentication
         const student = await this.studentRepository.findOne({ where: { id: sender_id } })
@@ -98,8 +99,8 @@ export class CmsService {
 
         //save message to database
         const gist = new MessageEntity()
-        gist.reciever_id = aStudent.username;
-        gist.sender_id = student.username;
+        gist.receiverId = aStudent.id;
+        gist.senderId = student.id;
         gist.date = new Date();
         gist.message = message;
 
@@ -109,9 +110,8 @@ export class CmsService {
     }
 
 
-
     //Student upload answers to assignment
-    async uploadAnswer(id: string, file: Express.Multer.File): Promise<{ message: string }> {
+    async uploadAnswer(id: number,  file: Express.Multer.File): Promise<{ message: string }> {
 
         //verify student id
         const student = await this.studentRepository.findOne({ where: { id } })
@@ -120,6 +120,7 @@ export class CmsService {
         }
 
         const filename = await this.uploadService.uploadFile(file)
+
         //upload the answer
         student.answer = filename;
 
@@ -132,8 +133,10 @@ export class CmsService {
     //student can download the assignment file
     //logout
 
+    //TEACHER
+
     //Teacher upload profile picture
-    async uploadTeacherPicture(id: string, file: Express.Multer.File): Promise<{ message: string }> {
+    async uploadTeacherPicture(id: number, file: Express.Multer.File): Promise<{ message: string }> {
         //verify by id
         const teacher = await this.teacherRepository.findOne({ where: { id } })
         if (!teacher) {
@@ -153,7 +156,7 @@ export class CmsService {
     }
 
     //Upload assigment for student
-    async uploadAssignment(teacher_id: string, student_id: string, file: Express.Multer.File): Promise<{ message: string }> {
+    async uploadAssignment(teacher_id: number, student_id: number, file: Express.Multer.File): Promise<{ message: string }> {
 
         //check if teacher is registered
         const teacher = await this.teacherRepository.findOne({ where: { id: teacher_id } })
@@ -168,21 +171,27 @@ export class CmsService {
         }
 
         //upload assignment to student
-        const assigment = await this.uploadService.uploadFile(file)
+        const assignmentFile = await this.uploadService.uploadFile(file)
 
-        //student gets the assignment
-        student.assignment = assigment;
+        // Create new assignment entity
+        const assignment = new AssignmentEntity();
+        assignment.studentId = student.id;
+        assignment.teacherId = teacher.id;
+        assignment.subject = 'Subject Name';
+        assignment.assignment = assignmentFile;
+        assignment.date = new Date();
 
-        //save to student database
-        await this.studentRepository.save(student)
+        // Save assignment to the database
+        await this.assignmentRepository.save(assignment);
 
         return { message: 'Assignment sent to student' }
+        //the assignment filename is not saving to the assignment table
     }
 
     //download answer to student assignmnent
 
     //teacher upload each student score
-    async studentScore(teacher_id: string, student_id: string, assign_id: string, dto: StudentScoreDto): Promise<{ message: string }> {
+    async studentScore(teacher_id: number, student_id: number, assign_id: number, dto: StudentScoreDto): Promise<{ message: string }> {
         //verify teacher by id
         const teacher = await this.teacherRepository.findOne({ where: { id: teacher_id } })
         if (!teacher) {
@@ -202,14 +211,101 @@ export class CmsService {
         }
 
         //set score for assignment
-        student.score = dto.score;
+        assigment.score = dto.score;
+        assigment.subject = dto.subject
+
+        //save to assignment database
+        await this.assignmentRepository.save(assigment)
 
         return { message: 'Student score recorded' }
     }
     //edit student score
-    //teacher sends mail to all student
-    //teacher receives student message
+    async editScore(studentId: number, teacherid: number,  assigmentId: number, dto: StudentScoreDto): Promise<{ message: string}> {
+        //find the student that 
+        const student = await this.studentRepository.findOne({ where: { id: studentId}})
+        if(!student) {
+            throw new BadRequestException('Cannot edit student score ')
+        }
+
+        //the teacher that wants to edit a student score
+        const teacher = await this.teacherRepository.findOne({ where: {id: teacherid}})
+        if(!teacher) {
+            throw new BadRequestException('Teacher cannot edit student score')
+        }
+
+        //find the assignment that the teacher wants to edit the student score
+        const assign = await this.assignmentRepository.findOne({ where: {id: assigmentId}})
+        if(!assign) {
+            throw new BadRequestException('cannot locate this assignment')
+        }
+
+        //edit score
+        student.score = dto.score
+
+        await this.assignmentRepository.save(assign)
+
+        return { message: 'Student score edited'}
+    }
+    
     //teacher sends student 
+    async messageStudent(teacherId: number, studentId: number, message: string): Promise<{ message: string}> {
+        const teacher = await this.teacherRepository.findOne({ where: {id: teacherId}})
+        if(!teacher) {
+            throw new BadRequestException('teacher cannot message student')
+        }
+
+        //student to recieve the message
+        const student = await this.studentRepository.findOne({ where: {id: studentId}})
+        if(!student) {
+            throw new BadRequestException('Student cannot receive message from teacher')
+        }
+
+        //create new message
+        const msg = new MessageEntity()
+        msg.senderId = teacher.id
+        msg.receiverId = student.id
+        msg.message = message;
+        msg.date = new Date();
+
+        //save to table
+        await this.messageRepository.save(msg)
+
+        return { message: 'Sent to student'}
+    }
+    
     //send message to teacher
+    async teacherToTeacher(teacherId: number, teaacherId: number, message: string): Promise<{ message: string}> {
+        const teacher = await this.teacherRepository.findOne({ where: {id: teacherId}})
+        if(!teacher) {
+            throw new BadRequestException('Not teacher')
+        }
+        //teacher to receive the message
+        const teaccher = await this.teacherRepository.findOne({ where: { id: teaacherId}})
+        if(!teaccher) {
+            throw new BadRequestException('teacher not allowed to recieve message')
+        }
+
+        //send the message
+        const msgg = new MessageEntity()
+        msgg.senderId = teacherId;
+        msgg.receiverId = teaacherId;
+        msgg.message = message;
+        msgg.date = new Date();
+
+        await this.messageRepository.save(msgg);
+
+        return {message: 'message sent to teacher'}
+    }
+
+    //ADMIN
+    //get all student
+    //get all teachers
+    //delete teacher's account
+    //delete student account
+    //update teacher profile
+    //update student profile
+    //Post Announcements for teachers and students
+    //send mails to students
+    //send mail to teachers
 }
 

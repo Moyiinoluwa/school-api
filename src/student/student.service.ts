@@ -45,7 +45,7 @@ export class StudentService {
     }
 
     //Access token
-    async signToken(id: string, email: string, role: string) {
+    async signToken(id: number, email: string, role: string) {
         const payload = {
             sub: id,
             email,
@@ -69,8 +69,7 @@ export class StudentService {
         if (studentRegister) {
             throw new HttpException('this student already exist', HttpStatus.FOUND)
         }
-
-
+        
         const hash = await this.hashPassword(dto.password);
 
         const student = new StudentEntity();
@@ -306,7 +305,7 @@ export class StudentService {
 
     // change password
     
-  async changePassword(id: string, dto: ChangePasswordDto): Promise<{ message: string }> {
+  async changePassword(id: number, dto: ChangePasswordDto): Promise<{ message: string }> {
     // Verify student by id
     const student = await this.studentRepository.findOne({ where: { id } });
     if (!student) {
@@ -332,7 +331,7 @@ export class StudentService {
   }
 
     //update profile
-    async updateProfile(dto: UpdateStudentDto, id: string): Promise<{ message: string}> {
+    async updateProfile(dto: UpdateStudentDto, id: number): Promise<{ message: string}> {
 
         //verify student authorization
         const student = await this.studentRepository.findOne({ where: { id }})
@@ -359,7 +358,7 @@ export class StudentService {
     }
     
     //get one student
-    async getOneStudent(id: string) {
+    async getOneStudent(id: number) {
         const student = await this.studentRepository.findOne({ where: {id}})
         if(!student) {
             throw new BadRequestException('student not found')

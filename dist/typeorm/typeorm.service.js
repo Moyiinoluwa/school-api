@@ -14,6 +14,7 @@ const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
 const admin_entity_1 = require("../Entity/admin.entity");
 const adminOtp_entity_1 = require("../Entity/adminOtp.entity");
+const assignment_entity_1 = require("../Entity/assignment.entity");
 const message_entity_1 = require("../Entity/message.entity");
 const notification_entity_1 = require("../Entity/notification.entity");
 const otp_entity_1 = require("../Entity/otp.entity");
@@ -39,7 +40,8 @@ let TypeormService = class TypeormService {
                 teacherOtp_entity_1.TeacherOtpEntity,
                 admin_entity_1.AdminEntity,
                 adminOtp_entity_1.AdminOtpEnitity,
-                message_entity_1.MessageEntity
+                message_entity_1.MessageEntity,
+                assignment_entity_1.AssignmentEntity
             ],
             synchronize: true
         };

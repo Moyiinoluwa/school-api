@@ -1,14 +1,20 @@
+import { TeacherEntity } from "./teacher.entity";
+import { StudentEntity } from "./student.entity";
 export interface IMessage {
-    sender_id: string;
-    reciever_id: string;
+    senderId: number;
+    receiverId: number;
     message: string;
-    id: string;
+    id: number;
     date: Date;
 }
 export declare class MessageEntity implements IMessage {
-    id: string;
-    sender_id: string;
-    reciever_id: string;
+    id: number;
+    senderId: number;
+    receiverId: number;
     message: string;
     date: Date;
+    sender: TeacherEntity;
+    receiver: TeacherEntity;
+    senders: StudentEntity[];
+    receivers: StudentEntity[];
 }

@@ -13,12 +13,15 @@ exports.StudentEntity = void 0;
 const general_enum_1 = require("../Enum/general.enum");
 const typeorm_1 = require("typeorm");
 const otp_entity_1 = require("./otp.entity");
+const assignment_entity_1 = require("./assignment.entity");
+const teacher_entity_1 = require("./teacher.entity");
+const message_entity_1 = require("./message.entity");
 let StudentEntity = class StudentEntity extends typeorm_1.BaseEntity {
 };
 exports.StudentEntity = StudentEntity;
 __decorate([
-    (0, typeorm_1.PrimaryGeneratedColumn)('uuid'),
-    __metadata("design:type", String)
+    (0, typeorm_1.PrimaryGeneratedColumn)(),
+    __metadata("design:type", Number)
 ], StudentEntity.prototype, "id", void 0);
 __decorate([
     (0, typeorm_1.Column)({ nullable: false, unique: true }),
@@ -105,13 +108,25 @@ __decorate([
     __metadata("design:type", String)
 ], StudentEntity.prototype, "answer", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ nullable: true }),
-    __metadata("design:type", String)
+    (0, typeorm_1.OneToOne)(() => otp_entity_1.StudentOtpEntity, (studentOtp) => studentOtp.student),
+    __metadata("design:type", Array)
+], StudentEntity.prototype, "studentOtp", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => assignment_entity_1.AssignmentEntity, assignment => assignment.student),
+    __metadata("design:type", Array)
 ], StudentEntity.prototype, "assignment", void 0);
 __decorate([
-    (0, typeorm_1.OneToOne)(() => otp_entity_1.StudentOtpEntity, (studentOtp) => studentOtp.student),
-    __metadata("design:type", StudentEntity)
-], StudentEntity.prototype, "studentOtp", void 0);
+    (0, typeorm_1.ManyToOne)(() => teacher_entity_1.TeacherEntity, teacher => teacher.student),
+    __metadata("design:type", Array)
+], StudentEntity.prototype, "teacher", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => message_entity_1.MessageEntity, message => message.senders),
+    __metadata("design:type", Array)
+], StudentEntity.prototype, "senders", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => message_entity_1.MessageEntity, message => message.receivers),
+    __metadata("design:type", Array)
+], StudentEntity.prototype, "receivers", void 0);
 exports.StudentEntity = StudentEntity = __decorate([
     (0, typeorm_1.Entity)({ name: 'student' })
 ], StudentEntity);
