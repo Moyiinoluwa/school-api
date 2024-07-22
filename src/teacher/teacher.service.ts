@@ -236,7 +236,7 @@ export class TeacherService {
         //checked if the teacher is registered
         const teacher = await this.teacherRepository.findOne({ where: { email: dto.email } })
         if (!teacher) {
-            throw new BadRequestException('teacher cannot login')
+            throw new BadRequestException('teacher is not registered')
         }
 
         // compare the password
@@ -258,10 +258,6 @@ export class TeacherService {
 
         //if the student has not reached the number of login limit, calculate number of attempted left
 
-        //check if the teacher is verified
-        if (!teacher.isVerified) {
-            throw new BadRequestException('Account is not verified, please request for verification code.')
-        }
 
         //update teacher profile
         await this.teacherRepository.save(teacher)
@@ -330,6 +326,18 @@ export class TeacherService {
         } else {
             return teacher;
         }
+    }
+
+    //delete profile
+    async deleteTeacher(id: number): Promise<{ message: string}> {
+        const teacher = await this.teacherRepository.findOne({ where: {id}})
+        if(!teacher) {
+            throw new BadRequestException('cannot delete teacher')
+        }
+
+        await this.teacherRepository.remove(teacher)
+
+        return { message: 'teacher deleted'}
     }
 
     //problems

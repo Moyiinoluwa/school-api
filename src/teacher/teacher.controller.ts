@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put } from '@nestjs/common';
 import { CreateTeacherDto, UpdateTeacherDto } from './teacher.dto';
 import { TeacherService } from './teacher.service';
 import { ChangeApassword, LoginDto, ResetDto, resendTeacherOtpDto, resetTeacherPasswordDto, verifyTeacherOtpDto } from 'src/common/common.dto'; 
@@ -56,4 +56,10 @@ export class TeacherController {
     async getOne(@Param('id') id: number) {
         return await this.teacherService.getTeacher(id)
     }
+
+    @Delete('/delete/:id')
+    async deleteTeacher(@Param('id') id: number) {
+        return await this.teacherService.deleteTeacher(id)
+    }
 }
+

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { StudentService } from './student.service';
 import { CreateStudentDto, UpdateStudentDto } from './student.dto';
 import { ChangePasswordDto, LoginDto, ResendOtpDto, ResetPassword, ResetPasswordLinkDto, VerifyOtpDto } from 'src/common/common.dto';
@@ -65,5 +65,11 @@ export class StudentController {
     @Get('/get/:id')
     async oneStudent(@Param('id') id: number) {
         return await this.studentService.getOneStudent(id)
+    }
+
+    //delete student
+    @Delete('/delete/:id')
+    async deleteStudent(@Param('id') id: number) {
+        return await this.studentService.deleteStudent(id)
     }
 }

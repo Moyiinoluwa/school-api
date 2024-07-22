@@ -45,4 +45,7 @@ export declare class TeacherService {
     }>;
     getTeachers(): Promise<TeacherEntity[]>;
     getTeacher(id: number): Promise<TeacherEntity>;
+    deleteTeacher(id: number): Promise<{
+        message: string;
+    }>;
 }

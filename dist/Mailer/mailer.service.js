@@ -50,6 +50,40 @@ let Mailer = class Mailer {
         `;
         await this.mailerservice.sendMail({ to: email, subject, html: body });
     }
+    async adminToTeachers(email, username) {
+        const subject = 'Important notice';
+        const body = `<!DOCTYPE HTML>
+        <html>
+        <head>
+        </head>
+        <body>
+        <h1>Announcemen</h1>
+        <h1>Hello ${username}</h1>
+        <h1> This is to remind you of the teachers' forum meeting on thurday, by 3pm</h1>
+        <P> Please note that attendance is complusory</P>
+        <p> Management</p>
+        </body>
+        </html>
+        `;
+        await this.mailerservice.sendMail({ to: email, subject, html: body });
+    }
+    async adminToStudent(email, name) {
+        const subject = 'Important notice';
+        const body = `<!DOCTYPE HTML>
+        <html>
+        <head>
+        </head>
+        <body>
+        <h1>Announcemen</h1>
+        <h1>Hello ${name}</h1>
+        <h1> All student are to meet at lobby at the end classes today.</h1>
+        <P> Please note that attendance is complusory</P>
+        <p> Management</p>
+        </body>
+        </html>
+        `;
+        await this.mailerservice.sendMail({ to: email, subject, html: body });
+    }
 };
 exports.Mailer = Mailer;
 exports.Mailer = Mailer = __decorate([

@@ -6,9 +6,13 @@ export interface IAdmin {
     password: string;
     username: string;
     createdAt: Date;
+    isVerified: boolean;
     isRegistered: boolean;
     isLoggedIn: boolean;
     isLoggedOut: boolean;
+    loginCount: number;
+    isLocked: boolean;
+    lockedUntil: Date;
     resetLink: string;
     isResetLinkSent: boolean;
     resetLinlExpirationTime: Date;
@@ -21,6 +25,7 @@ export declare class AdminEntity implements IAdmin {
     password: string;
     username: string;
     createdAt: Date;
+    isVerified: boolean;
     isLoggedIn: boolean;
     isLoggedOut: boolean;
     isRegistered: boolean;
@@ -28,4 +33,7 @@ export declare class AdminEntity implements IAdmin {
     isResetLinkSent: boolean;
     resetLinlExpirationTime: Date;
     role: Role;
+    loginCount: number;
+    isLocked: boolean;
+    lockedUntil: Date;
 }

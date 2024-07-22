@@ -24,14 +24,34 @@ const mailer_service_1 = require("../Mailer/mailer.service");
 const common_repository_1 = require("../common/common.repository");
 const typeorm_2 = require("typeorm");
 const uuid_1 = require("uuid");
+const config_1 = require("@nestjs/config");
+const jwt_1 = require("@nestjs/jwt");
 let AdminService = class AdminService {
-    constructor(adminRepository, adminOtpRepository, mailer) {
+    constructor(adminRepository, adminOtpRepository, mailer, configService, jwt) {
         this.adminRepository = adminRepository;
         this.adminOtpRepository = adminOtpRepository;
         this.mailer = mailer;
+        this.configService = configService;
+        this.jwt = jwt;
     }
     async hashPassword(password) {
         return await bcrypt.hash(password, 12);
+    }
+    async comparePassword(password, userPassword) {
+        return await bcrypt.compare(password, userPassword);
+    }
+    async signToken(id, email, role) {
+        const payload = {
+            sub: id,
+            email,
+            role
+        };
+        const secret = this.configService.get('SECRET_KEY');
+        const token = this.jwt.signAsync(payload, {
+            expiresIn: this.configService.get('EXPIRESIN'),
+            secret: secret
+        });
+        return { accesToken: token };
     }
     async codeDigit() {
         const code = (0, nanoid_1.customAlphabet)('1234567890', 6);
@@ -131,6 +151,72 @@ let AdminService = class AdminService {
         admin.password = hash;
         return { message: 'password reset' };
     }
+    async adminLogin(dto) {
+        const admin = await this.adminRepository.findOne({ where: { email: dto.email } });
+        if (!admin) {
+            throw new common_1.BadRequestException('Admin is not registered');
+        }
+        const addmin = this.comparePassword(dto.password, admin.password);
+        if (!addmin) {
+            admin.loginCount = +1;
+            throw new common_1.BadRequestException('Incorrect password');
+        }
+        if (admin.loginCount >= 5) {
+            admin.isLocked = true;
+            admin.lockedUntil = new Date(Date.now() + 2 * 60 * 60 * 1000);
+            throw new common_1.BadRequestException('invalid password, account locked for two hours');
+        }
+        admin.loginCount = 0;
+        admin.isLoggedIn = true;
+        await this.adminRepository.save(admin);
+        return await this.signToken(admin.id, admin.email, admin.role);
+    }
+    async changeAdminPassword(dto, id) {
+        const admin = await this.adminRepository.findOne({ where: { id } });
+        if (!admin) {
+            throw new common_1.BadRequestException('Admin cannot change password');
+        }
+        const pass = await this.comparePassword(dto.oldPassword, admin.password);
+        if (!pass) {
+            throw new common_1.BadRequestException('the password you entered is incorrect');
+        }
+        const hash = await this.hashPassword(dto.newPassword);
+        admin.password = hash;
+        await this.adminRepository.save(admin);
+        return { message: 'new password ' };
+    }
+    async updateAdmin(id, dto) {
+        const admin = await this.adminRepository.findOne({ where: { id } });
+        if (!admin) {
+            throw new common_1.BadRequestException('admin cannot update profile');
+        }
+        admin.email = dto.email;
+        admin.fullname = dto.fullname;
+        admin.username = dto.username;
+        await this.adminRepository.save(admin);
+        return { message: 'Profile updated' };
+    }
+    async deleteAdmin(id) {
+        const admin = await this.adminRepository.findOne({ where: { id } });
+        if (!admin) {
+            throw new common_1.BadRequestException('cannot delete admin');
+        }
+        await this.adminRepository.remove(admin);
+        return { message: 'admin deleted' };
+    }
+    async getAdmins() {
+        const admin = await this.adminRepository.find();
+        return admin;
+    }
+    async getAdmin(id) {
+        const admin = await this.adminRepository.findOne({ where: { id } });
+        if (!admin) {
+            throw new common_1.BadRequestException('cannot get admin');
+        }
+        else {
+            return admin;
+        }
+    }
 };
 exports.AdminService = AdminService;
 exports.AdminService = AdminService = __decorate([
@@ -139,6 +225,8 @@ exports.AdminService = AdminService = __decorate([
     __param(1, (0, typeorm_1.InjectRepository)(common_repository_1.AdminOtpRepository)),
     __metadata("design:paramtypes", [admin_repository_1.AdminRepository,
         common_repository_1.AdminOtpRepository,
-        mailer_service_1.Mailer])
+        mailer_service_1.Mailer,
+        config_1.ConfigService,
+        jwt_1.JwtService])
 ], AdminService);
 //# sourceMappingURL=admin.service.js.map

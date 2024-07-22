@@ -1,4 +1,4 @@
-import { IsNotEmpty } from "class-validator";
+import { IsEmail, IsNotEmpty, IsString } from "class-validator";
 
 //student check scores
  export class StudentScoreDto {
@@ -7,4 +7,25 @@ import { IsNotEmpty } from "class-validator";
 
     @IsNotEmpty()
     subject: string
+ }
+
+ //send mail to student
+ export class SendMailToStudent {
+   @IsNotEmpty()
+   @IsEmail()
+   email: string
+
+   @IsNotEmpty()
+   @IsString()
+   username: string
+ }
+
+ //send mail to teachers
+ export class SendEmailTeacher {
+   @IsNotEmpty()
+   @IsEmail()
+   email: string
+
+   @IsNotEmpty()
+   name: string
  }

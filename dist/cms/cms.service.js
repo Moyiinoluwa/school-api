@@ -21,13 +21,17 @@ const cms_repository_1 = require("./cms.repository");
 const message_entity_1 = require("../Entity/message.entity");
 const upload_service_1 = require("../Helpers/upload.service");
 const assignment_entity_1 = require("../Entity/assignment.entity");
+const admin_repository_1 = require("../admin/admin.repository");
+const mailer_service_1 = require("../Mailer/mailer.service");
 let CmsService = class CmsService {
-    constructor(studentRepository, teacherRepository, messageRepository, assignmentRepository, uploadService) {
+    constructor(studentRepository, teacherRepository, messageRepository, assignmentRepository, adminRepository, uploadService, mailer) {
         this.studentRepository = studentRepository;
         this.teacherRepository = teacherRepository;
         this.messageRepository = messageRepository;
         this.assignmentRepository = assignmentRepository;
+        this.adminRepository = adminRepository;
         this.uploadService = uploadService;
+        this.mailer = mailer;
     }
     async uploadProfilePicture(id, file) {
         const student = await this.studentRepository.findOne({ where: { id } });
@@ -192,6 +196,60 @@ let CmsService = class CmsService {
         await this.messageRepository.save(msgg);
         return { message: 'message sent to teacher' };
     }
+    async getStudent() {
+        const student = await this.studentRepository.find();
+        return student;
+    }
+    async getTeacher() {
+        const teacher = await this.teacherRepository.find();
+        return teacher;
+    }
+    async deleteTeacher(id) {
+        const teacher = await this.teacherRepository.findOne({ where: { id } });
+        if (!teacher) {
+            throw new common_1.BadRequestException('admin cannot delete teacher');
+        }
+        await this.teacherRepository.remove(teacher);
+        return { message: 'teacher account deleted' };
+    }
+    async deleteStudent(id) {
+        const student = await this.studentRepository.findOne({ where: { id } });
+        if (!student) {
+            throw new common_1.BadRequestException('Admin cannot delete student');
+        }
+        await this.studentRepository.remove(student);
+        return { message: 'student account deleted' };
+    }
+    async sendMailToStudent(id) {
+        const admin = await this.adminRepository.findOne({ where: { id } });
+        if (!admin) {
+            throw new common_1.BadRequestException('admin cannot send email to student');
+        }
+        const students = await this.studentRepository.find();
+        if (!students.length) {
+            throw new common_1.BadRequestException('there are no student');
+        }
+        const sendMailPromises = students.map(async (student) => {
+            await this.mailer.adminToStudent(student.email, student.username);
+        });
+        await Promise.all(sendMailPromises);
+        return { message: 'email sent to student' };
+    }
+    async sendMailToTeachers(id) {
+        const admin = await this.adminRepository.findOne({ where: { id } });
+        if (!admin) {
+            throw new common_1.BadRequestException('admin cannot send mail to teachers');
+        }
+        const teachers = await this.teacherRepository.find();
+        if (!teachers.length) {
+            throw new common_1.BadRequestException('theres are no registered teachers');
+        }
+        const sendMail = teachers.map(async (teacher) => {
+            await this.mailer.adminToTeachers(teacher.email, teacher.username);
+        });
+        await Promise.all(sendMail);
+        return { message: 'Mail sent to teachers' };
+    }
 };
 exports.CmsService = CmsService;
 exports.CmsService = CmsService = __decorate([
@@ -200,10 +258,13 @@ exports.CmsService = CmsService = __decorate([
     __param(1, (0, typeorm_1.InjectRepository)(teacher_repository_1.TeacherRepository)),
     __param(2, (0, typeorm_1.InjectRepository)(cms_repository_1.MessageRepository)),
     __param(3, (0, typeorm_1.InjectRepository)(cms_repository_1.AssignmentRepository)),
+    __param(4, (0, typeorm_1.InjectRepository)(admin_repository_1.AdminRepository)),
     __metadata("design:paramtypes", [student_repository_1.StudentRepository,
         teacher_repository_1.TeacherRepository,
         cms_repository_1.MessageRepository,
         cms_repository_1.AssignmentRepository,
-        upload_service_1.UploadService])
+        admin_repository_1.AdminRepository,
+        upload_service_1.UploadService,
+        mailer_service_1.Mailer])
 ], CmsService);
 //# sourceMappingURL=cms.service.js.map

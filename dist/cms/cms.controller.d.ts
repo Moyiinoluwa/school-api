@@ -35,4 +35,12 @@ export declare class CmsController {
     teacher(teacherId: number, teaacherId: number, message: string): Promise<{
         message: string;
     }>;
+    getStudent(): Promise<import("../Entity/student.entity").StudentEntity[]>;
+    getTeacher(): Promise<import("../Entity/teacher.entity").TeacherEntity[]>;
+    sendMail(id: number): Promise<{
+        message: string;
+    }>;
+    sendMailTeacher(id: number): Promise<{
+        message: string;
+    }>;
 }

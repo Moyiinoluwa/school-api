@@ -3,9 +3,9 @@ import { IsEmail, IsNotEmpty, IsString, IsStrongPassword, Matches, matches } fro
 
 //verify student otp
 export class VerifyOtpDto {
-     @IsEmail()
-     @IsNotEmpty()
-     email: string
+    @IsEmail()
+    @IsNotEmpty()
+    email: string
 
     @IsString()
     @IsNotEmpty()
@@ -78,7 +78,7 @@ export class verifyTeacherOtpDto {
 }
 
 //resend teacher verification code
-export class resendTeacherOtpDto{
+export class resendTeacherOtpDto {
     @IsEmail()
     @IsNotEmpty()
     email: string
@@ -96,7 +96,7 @@ export class resetTeacherPasswordDto {
     @IsEmail()
     @IsNotEmpty()
     email: string
-     
+
     @IsString()
     @IsNotEmpty()
     resetLink: string
@@ -142,10 +142,10 @@ export class ResetAdminPassword {
     @IsEmail()
     @IsNotEmpty()
     email: string
-    
+
     @IsNotEmpty()
     resetLink: string
-    
+
     @IsNotEmpty()
     @IsStrongPassword({
         minLength: 8,
@@ -157,10 +157,10 @@ export class ResetAdminPassword {
     password: string
 }
 
- //change password
- export class ChangePasswordDto {
+//change password
+export class ChangePasswordDto {
     @IsString()
-    @IsNotEmpty({ message: 'current password cannot be empty'})
+    @IsNotEmpty({ message: 'current password cannot be empty' })
     @IsStrongPassword({
         minLength: 8,
         minLowercase: 1,
@@ -171,7 +171,7 @@ export class ResetAdminPassword {
     oldPassword: string
 
     @IsString()
-    @IsNotEmpty({message: 'new password cannot be empty' })
+    @IsNotEmpty({ message: 'new password cannot be empty' })
     @IsStrongPassword({
         minLength: 8,
         minLowercase: 1,
@@ -184,11 +184,11 @@ export class ResetAdminPassword {
     // @IsNotEmpty()
     // //@match('newPassword', { message:'ConfirmPassword does not match the newPassword'})
     // confirmPassword: string
- }
+}
 
-    export class ChangeApassword {
-        @IsString()
-    @IsNotEmpty({ message: 'current password cannot be empty'})
+export class ChangeApassword {
+    @IsString()
+    @IsNotEmpty({ message: 'current password cannot be empty' })
     @IsStrongPassword({
         minLength: 8,
         minLowercase: 1,
@@ -199,7 +199,7 @@ export class ResetAdminPassword {
     oldPassword: string
 
     @IsString()
-    @IsNotEmpty({message: 'new password cannot be empty' })
+    @IsNotEmpty({ message: 'new password cannot be empty' })
     @IsStrongPassword({
         minLength: 8,
         minLowercase: 1,
@@ -208,5 +208,5 @@ export class ResetAdminPassword {
         minNumbers: 1
     })
     newPassword: string
-    }
+}
 

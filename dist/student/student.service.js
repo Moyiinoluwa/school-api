@@ -199,7 +199,7 @@ let StudentService = class StudentService {
         if (!isPasswordValid) {
             throw new common_1.BadRequestException('Current password is incorrect');
         }
-        const hashedNewPassword = await bcrypt.hash(dto.newPassword, 10);
+        const hashedNewPassword = await this.hashPassword(dto.newPassword);
         student.password = hashedNewPassword;
         await this.studentRepository.save(student);
         return { message: 'Password changed successfully' };
@@ -228,6 +228,14 @@ let StudentService = class StudentService {
         else {
             return student;
         }
+    }
+    async deleteStudent(id) {
+        const student = await this.studentRepository.findOne({ where: { id } });
+        if (!student) {
+            throw new common_1.BadRequestException('cannot delete student');
+        }
+        await this.studentRepository.remove(student);
+        return { message: 'student deleted' };
     }
 };
 exports.StudentService = StudentService;

@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Patch, Post, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { CmsService } from './cms.service';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { StudentScoreDto } from './cms.dto';
+import { SendEmailTeacher, SendMailToStudent, StudentScoreDto } from './cms.dto';
 
 
 @Controller('cms')
@@ -81,5 +81,29 @@ export class CmsController {
     @Post('/send-teacher/:teacherid/:teacherId')
     async teacher(@Param('teacherId') teacherId: number, @Param('teaacherId') teaacherId: number, @Body() message: string) {
         return await this.cmsService.teacherToTeacher(teacherId, teaacherId, message)
+    }
+
+    //Admin get all student
+    @Get('/get-students')
+    async getStudent() {
+        return await this.cmsService.getStudent()
+    }
+
+    //Admin get all teachers
+    @Get('/get-teachers')
+    async getTeacher() {
+        return await this.cmsService.getTeacher()
+    }
+
+    //Admin sends email to student
+    @Post('/mail-student/:id')
+    async sendMail(@Param('id') id: number) {
+        return await this.cmsService.sendMailToStudent(id)
+    }
+
+    //Admin send mail to teachers
+    @Post('/mail-teacher/:id')
+    async sendMailTeacher(@Param('id') id: number) {
+        return await this.cmsService.sendMailToTeachers(id)
     }
 }

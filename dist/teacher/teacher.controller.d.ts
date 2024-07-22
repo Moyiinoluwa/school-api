@@ -30,4 +30,7 @@ export declare class TeacherController {
     }>;
     getAll(): Promise<import("../Entity/teacher.entity").TeacherEntity[]>;
     getOne(id: number): Promise<import("../Entity/teacher.entity").TeacherEntity>;
+    deleteTeacher(id: number): Promise<{
+        message: string;
+    }>;
 }

@@ -10,10 +10,13 @@ import { AssignmentRepository, MessageRepository } from './cms.repository';
 import { TeacherEntity } from 'src/Entity/teacher.entity';
 import { MessageEntity } from 'src/Entity/message.entity';
 import { AssignmentEntity } from 'src/Entity/assignment.entity';
+import { AdminEntity } from 'src/Entity/admin.entity';
+import { AdminRepository } from 'src/admin/admin.repository';
+import { Mailer } from 'src/Mailer/mailer.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([StudentEntity, TeacherEntity, MessageEntity, AssignmentEntity])],
+  imports: [TypeOrmModule.forFeature([StudentEntity, TeacherEntity, MessageEntity, AssignmentEntity, AdminEntity])],
   controllers: [CmsController],
-  providers: [CmsService, StudentRepository, UploadService, TeacherRepository, MessageRepository, AssignmentRepository ]
+  providers: [CmsService, StudentRepository, UploadService, TeacherRepository, MessageRepository, AssignmentRepository, AdminRepository, Mailer ]
 })
 export class CmsModule {}

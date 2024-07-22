@@ -5,8 +5,12 @@ import { TeacherRepository } from 'src/teacher/teacher.repository';
 import { AssignmentRepository, MessageRepository } from './cms.repository';
 import { MessageEntity } from 'src/Entity/message.entity';
 import { UploadService } from 'src/Helpers/upload.service';
-import { StudentScoreDto } from './cms.dto';
+import { SendEmailTeacher, SendMailToStudent, StudentScoreDto } from './cms.dto';
 import { AssignmentEntity } from 'src/Entity/assignment.entity';
+import { StudentEntity } from 'src/Entity/student.entity';
+import { TeacherEntity } from 'src/Entity/teacher.entity';
+import { AdminRepository } from 'src/admin/admin.repository';
+import { Mailer } from 'src/Mailer/mailer.service';
 
 
 @Injectable()
@@ -15,7 +19,9 @@ export class CmsService {
         @InjectRepository(TeacherRepository) private readonly teacherRepository: TeacherRepository,
         @InjectRepository(MessageRepository) private readonly messageRepository: MessageRepository,
         @InjectRepository(AssignmentRepository) private readonly assignmentRepository: AssignmentRepository,
-        private uploadService: UploadService
+        @InjectRepository(AdminRepository) private readonly adminRepository: AdminRepository,
+        private uploadService: UploadService,
+        private mailer: Mailer
     ) { }
 
     //STUDENT
@@ -111,7 +117,7 @@ export class CmsService {
 
 
     //Student upload answers to assignment
-    async uploadAnswer(id: number,  file: Express.Multer.File): Promise<{ message: string }> {
+    async uploadAnswer(id: number, file: Express.Multer.File): Promise<{ message: string }> {
 
         //verify student id
         const student = await this.studentRepository.findOne({ where: { id } })
@@ -220,22 +226,22 @@ export class CmsService {
         return { message: 'Student score recorded' }
     }
     //edit student score
-    async editScore(studentId: number, teacherid: number,  assigmentId: number, dto: StudentScoreDto): Promise<{ message: string}> {
+    async editScore(studentId: number, teacherid: number, assigmentId: number, dto: StudentScoreDto): Promise<{ message: string }> {
         //find the student that 
-        const student = await this.studentRepository.findOne({ where: { id: studentId}})
-        if(!student) {
+        const student = await this.studentRepository.findOne({ where: { id: studentId } })
+        if (!student) {
             throw new BadRequestException('Cannot edit student score ')
         }
 
         //the teacher that wants to edit a student score
-        const teacher = await this.teacherRepository.findOne({ where: {id: teacherid}})
-        if(!teacher) {
+        const teacher = await this.teacherRepository.findOne({ where: { id: teacherid } })
+        if (!teacher) {
             throw new BadRequestException('Teacher cannot edit student score')
         }
 
         //find the assignment that the teacher wants to edit the student score
-        const assign = await this.assignmentRepository.findOne({ where: {id: assigmentId}})
-        if(!assign) {
+        const assign = await this.assignmentRepository.findOne({ where: { id: assigmentId } })
+        if (!assign) {
             throw new BadRequestException('cannot locate this assignment')
         }
 
@@ -244,19 +250,19 @@ export class CmsService {
 
         await this.assignmentRepository.save(assign)
 
-        return { message: 'Student score edited'}
+        return { message: 'Student score edited' }
     }
-    
+
     //teacher sends student 
-    async messageStudent(teacherId: number, studentId: number, message: string): Promise<{ message: string}> {
-        const teacher = await this.teacherRepository.findOne({ where: {id: teacherId}})
-        if(!teacher) {
+    async messageStudent(teacherId: number, studentId: number, message: string): Promise<{ message: string }> {
+        const teacher = await this.teacherRepository.findOne({ where: { id: teacherId } })
+        if (!teacher) {
             throw new BadRequestException('teacher cannot message student')
         }
 
         //student to recieve the message
-        const student = await this.studentRepository.findOne({ where: {id: studentId}})
-        if(!student) {
+        const student = await this.studentRepository.findOne({ where: { id: studentId } })
+        if (!student) {
             throw new BadRequestException('Student cannot receive message from teacher')
         }
 
@@ -270,18 +276,18 @@ export class CmsService {
         //save to table
         await this.messageRepository.save(msg)
 
-        return { message: 'Sent to student'}
+        return { message: 'Sent to student' }
     }
-    
+
     //send message to teacher
-    async teacherToTeacher(teacherId: number, teaacherId: number, message: string): Promise<{ message: string}> {
-        const teacher = await this.teacherRepository.findOne({ where: {id: teacherId}})
-        if(!teacher) {
+    async teacherToTeacher(teacherId: number, teaacherId: number, message: string): Promise<{ message: string }> {
+        const teacher = await this.teacherRepository.findOne({ where: { id: teacherId } })
+        if (!teacher) {
             throw new BadRequestException('Not teacher')
         }
         //teacher to receive the message
-        const teaccher = await this.teacherRepository.findOne({ where: { id: teaacherId}})
-        if(!teaccher) {
+        const teaccher = await this.teacherRepository.findOne({ where: { id: teaacherId } })
+        if (!teaccher) {
             throw new BadRequestException('teacher not allowed to recieve message')
         }
 
@@ -294,18 +300,92 @@ export class CmsService {
 
         await this.messageRepository.save(msgg);
 
-        return {message: 'message sent to teacher'}
+        return { message: 'message sent to teacher' }
     }
 
     //ADMIN
-    //get all student
-    //get all teachers
-    //delete teacher's account
-    //delete student account
-    //update teacher profile
-    //update student profile
-    //Post Announcements for teachers and students
-    //send mails to students
-    //send mail to teachers
-}
+    //Get all student
+    async getStudent(): Promise<StudentEntity[]> {
+        const student = await this.studentRepository.find()
+        return student;
+    }
+
+    //Get all teachers
+    async getTeacher(): Promise<TeacherEntity[]> {
+        const teacher = await this.teacherRepository.find()
+        return teacher;
+    }
+
+    //Delete teacher's account
+    async deleteTeacher(id: number): Promise<{ message: string }> {
+        const teacher = await this.teacherRepository.findOne({ where: { id } })
+        if (!teacher) {
+            throw new BadRequestException('admin cannot delete teacher')
+        }
+
+        await this.teacherRepository.remove(teacher)
+
+        return { message: 'teacher account deleted' }
+    }
+
+    //Delete student account
+    async deleteStudent(id: number): Promise<{ message: string }> {
+        const student = await this.studentRepository.findOne({ where: { id } })
+        if (!student) {
+            throw new BadRequestException('Admin cannot delete student')
+        }
+
+        await this.studentRepository.remove(student)
+
+        return { message: 'student account deleted' }
+    }
+
+    //Send mails to students
+    async sendMailToStudent(id: number): Promise<{ message: string }> {
+        //check if the admin is registered
+        const admin = await this.adminRepository.findOne({ where: { id } })
+        if (!admin) {
+            throw new BadRequestException('admin cannot send email to student')
+        }
+
+        //check if there are registered student
+        const students = await this.studentRepository.find()
+        if (!students.length) {
+            throw new BadRequestException('there are no student')
+        }
+
+        // Send mail to all registered students
+        const sendMailPromises = students.map(async (student) => {
+            await this.mailer.adminToStudent(student.email, student.username );
+        });
+
+        await Promise.all(sendMailPromises);
+
+        return { message: 'email sent to student' }
+    }
+
+
+    //Send mail to teachers
+    async sendMailToTeachers(id: number ): Promise<{ message: string}> {
+        const admin = await this.adminRepository.findOne({ where: {id}})
+        if(!admin) {
+            throw new BadRequestException('admin cannot send mail to teachers')
+        }
+
+        //get all teachers
+        const teachers = await this.teacherRepository.find()
+        if(!teachers.length) {
+            throw new BadRequestException('theres are no registered teachers')
+        }
+
+        //send mail 
+        const sendMail = teachers.map(async (teacher) => {
+            await this.mailer.adminToTeachers(teacher.email, teacher.username)
+        });
+
+        await Promise.all(sendMail)
+
+        return { message: 'Mail sent to teachers'}
+    }
+} 
 

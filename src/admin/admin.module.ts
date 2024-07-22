@@ -7,11 +7,13 @@ import { AdminOtpEnitity } from 'src/Entity/adminOtp.entity';
 import { AdminRepository } from './admin.repository';
 import { Mailer } from 'src/Mailer/mailer.service';
 import { AdminOtpRepository } from 'src/common/common.repository';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 
 
 @Module({
   imports: [TypeOrmModule.forFeature([AdminEntity, AdminOtpEnitity])],
   controllers: [AdminController],
-  providers: [ AdminService, AdminRepository, AdminOtpRepository, Mailer]
+  providers: [ AdminService, AdminRepository, AdminOtpRepository, Mailer, JwtService, ConfigService]
 })
 export class AdminModule {}

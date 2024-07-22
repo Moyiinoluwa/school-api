@@ -1,27 +1,53 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AdminRepository } from './admin.repository';
-import { CreateAdminDto } from './admin.dto';
+import { CreateAdminDto, UpdateAdminDto } from './admin.dto';
 import * as bcrypt from 'bcrypt';
 import { AdminEntity } from 'src/Entity/admin.entity';
 import { customAlphabet } from 'nanoid';
 import { AdminOtpEnitity } from 'src/Entity/adminOtp.entity';
 import { Mailer } from 'src/Mailer/mailer.service';
 import { AdminOtpRepository } from 'src/common/common.repository';
-import { VerifyAdminOtp, ResendAdminOtpDto, ResetAdminPasswordLink, ResetAdminPassword } from 'src/common/common.dto';
+import { VerifyAdminOtp, ResendAdminOtpDto, ResetAdminPasswordLink, ResetAdminPassword, LoginDto, ChangeApassword } from 'src/common/common.dto';
 import { LessThan } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
+import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AdminService {
     constructor(@InjectRepository(AdminRepository) private readonly adminRepository: AdminRepository,
         @InjectRepository(AdminOtpRepository) private readonly adminOtpRepository: AdminOtpRepository,
-        private readonly mailer: Mailer
+        private readonly mailer: Mailer,
+        private configService: ConfigService,
+        private jwt: JwtService
     ) { }
 
-    //hash password for registration
+    //Hash password for registration
     async hashPassword(password: any): Promise<string> {
         return await bcrypt.hash(password, 12)
+    }
+
+    //Compare password
+    async comparePassword(password: any, userPassword: any): Promise<boolean> {
+        return await bcrypt.compare(password, userPassword)
+    }
+
+    //Access Token
+    async signToken(id: number, email: string, role: string) {
+        const payload = {
+            sub: id,
+            email,
+            role
+        }
+
+        const secret = this.configService.get('SECRET_KEY')
+        const token = this.jwt.signAsync(payload, {
+            expiresIn: this.configService.get('EXPIRESIN'),
+            secret: secret
+        })
+
+        return { accesToken: token}
     }
 
     //verification code
@@ -192,11 +218,107 @@ export class AdminService {
     }
 
     //LOGIN
+    //check if the admin is registered
+    async adminLogin(dto: LoginDto) {
+        const admin = await this.adminRepository.findOne({ where: {email: dto.email}})
+        if(!admin) {
+            throw new BadRequestException('Admin is not registered')
+        }
+
+        //comapre the password and count the login attempts
+         const addmin =  this.comparePassword(dto.password, admin.password)
+        if(!addmin) {
+            admin.loginCount = + 1;
+
+            throw new BadRequestException('Incorrect password')
+        }
+
+        //if admin has exceeded the login attempts
+        if(admin.loginCount >= 5) {
+            admin.isLocked = true;
+            admin.lockedUntil = new Date(Date.now() + 2 * 60 * 60 * 1000) // lock for two hours
+
+            throw new BadRequestException('invalid password, account locked for two hours')
+        }
+
+        //if the password matches  the reset the login count and unlock the account
+        admin.loginCount = 0;
+        admin.isLoggedIn = true;
+
+        await this.adminRepository.save(admin)
+        
+        return await this.signToken(admin.id, admin.email, admin.role)
+    }
+
+    //Change password
+    async changeAdminPassword(dto: ChangeApassword, id: number): Promise<{ message: string}> {
+        const admin = await this.adminRepository.findOne({ where: {id}})
+        if(!admin) {
+            throw new BadRequestException('Admin cannot change password')
+        }
+
+        //compare the pasword the admin enteres with the saved password
+        const pass =  await this.comparePassword(dto.oldPassword, admin.password)
+        if(!pass) {
+            throw new BadRequestException('the password you entered is incorrect')
+        }
+
+        //hash new password
+        const hash = await this.hashPassword(dto.newPassword)
+
+        admin.password = hash;
+
+        await this.adminRepository.save(admin)
+
+        return { message: 'new password '}
+    }
+
+    //Update profile
+    async updateAdmin(id: number, dto:UpdateAdminDto): Promise<{ message: string}> {
+        //find admin 
+        const admin = await this.adminRepository.findOne({ where: {id}})
+        if(!admin) {
+            throw new BadRequestException('admin cannot update profile')
+        }
+
+        //save update
+        admin.email = dto.email;
+        admin.fullname = dto.fullname;
+        admin.username = dto.username
+
+        await this.adminRepository.save(admin)
+
+        return { message: 'Profile updated'}
+    }
+
+    //Delete profile
+    async deleteAdmin(id: number): Promise<{ message: string}> {
+        const admin = await this.adminRepository.findOne({ where: { id}})
+        if(!admin) {
+            throw new BadRequestException('cannot delete admin')
+        }
+
+        await this.adminRepository.remove(admin)
+
+        return { message: 'admin deleted'}
+    }
+
+    //Get all admin
+    async getAdmins(): Promise<AdminEntity[]> {
+    const admin = await this.adminRepository.find()
+    return admin;
+    }
+
+    //Get an admin
+    async getAdmin(id: number) {
+        const admin = await this.adminRepository.findOne({ where: {id}})
+        if(!admin) {
+            throw new BadRequestException('cannot get admin')
+        } else {
+            return admin;
+        }
+    }
+    //Logout
     //change password
-    //update profile
-    //delete profile
-    //get all admin
-    //get an admin
-    //logout
 }
 

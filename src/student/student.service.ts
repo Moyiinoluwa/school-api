@@ -319,7 +319,7 @@ export class StudentService {
     }
 
     // Student entered the new password
-    const hashedNewPassword = await bcrypt.hash(dto.newPassword, 10);
+    const hashedNewPassword = await this.hashPassword(dto.newPassword)
 
     // Update changes
     student.password = hashedNewPassword;
@@ -365,10 +365,19 @@ export class StudentService {
         } else {
             return student;
         }
-
     }
 
+    //delete account
+    async deleteStudent(id: number): Promise<{ message: string}> {
+        const student = await this.studentRepository.findOne({ where: { id}})
+        if(!student) {
+            throw new BadRequestException('cannot delete student')
+        }
+
+        await this.studentRepository.remove(student)
+
+        return { message: 'student deleted'}
+    }
     //problems
     //resend otp
-    //change password
 }

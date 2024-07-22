@@ -46,4 +46,7 @@ export declare class StudentService {
     }>;
     getAll(): Promise<StudentEntity[]>;
     getOneStudent(id: number): Promise<StudentEntity>;
+    deleteStudent(id: number): Promise<{
+        message: string;
+    }>;
 }

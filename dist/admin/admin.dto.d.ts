@@ -4,3 +4,8 @@ export declare class CreateAdminDto {
     password: string;
     username: string;
 }
+export declare class UpdateAdminDto {
+    fullname: string;
+    email: string;
+    username: string;
+}

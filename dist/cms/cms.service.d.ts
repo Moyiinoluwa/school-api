@@ -4,13 +4,19 @@ import { TeacherRepository } from 'src/teacher/teacher.repository';
 import { AssignmentRepository, MessageRepository } from './cms.repository';
 import { UploadService } from 'src/Helpers/upload.service';
 import { StudentScoreDto } from './cms.dto';
+import { StudentEntity } from 'src/Entity/student.entity';
+import { TeacherEntity } from 'src/Entity/teacher.entity';
+import { AdminRepository } from 'src/admin/admin.repository';
+import { Mailer } from 'src/Mailer/mailer.service';
 export declare class CmsService {
     private readonly studentRepository;
     private readonly teacherRepository;
     private readonly messageRepository;
     private readonly assignmentRepository;
+    private readonly adminRepository;
     private uploadService;
-    constructor(studentRepository: StudentRepository, teacherRepository: TeacherRepository, messageRepository: MessageRepository, assignmentRepository: AssignmentRepository, uploadService: UploadService);
+    private mailer;
+    constructor(studentRepository: StudentRepository, teacherRepository: TeacherRepository, messageRepository: MessageRepository, assignmentRepository: AssignmentRepository, adminRepository: AdminRepository, uploadService: UploadService, mailer: Mailer);
     uploadProfilePicture(id: number, file: Express.Multer.File): Promise<{
         message: string;
     }>;
@@ -40,6 +46,20 @@ export declare class CmsService {
         message: string;
     }>;
     teacherToTeacher(teacherId: number, teaacherId: number, message: string): Promise<{
+        message: string;
+    }>;
+    getStudent(): Promise<StudentEntity[]>;
+    getTeacher(): Promise<TeacherEntity[]>;
+    deleteTeacher(id: number): Promise<{
+        message: string;
+    }>;
+    deleteStudent(id: number): Promise<{
+        message: string;
+    }>;
+    sendMailToStudent(id: number): Promise<{
+        message: string;
+    }>;
+    sendMailToTeachers(id: number): Promise<{
         message: string;
     }>;
 }

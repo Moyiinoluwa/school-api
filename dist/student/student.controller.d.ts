@@ -30,4 +30,7 @@ export declare class StudentController {
     }>;
     allStudent(): Promise<import("../Entity/student.entity").StudentEntity[]>;
     oneStudent(id: number): Promise<import("../Entity/student.entity").StudentEntity>;
+    deleteStudent(id: number): Promise<{
+        message: string;
+    }>;
 }

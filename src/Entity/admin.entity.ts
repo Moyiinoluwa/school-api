@@ -1,53 +1,57 @@
-
 import { Role } from "src/Enum/general.enum";
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
 
- export interface IAdmin {
-    id: number;
-    fullname: string;
-    email: string;
-    password: string;
-    username: string
-    createdAt: Date;
-    //isActive: true;
-     isRegistered: boolean;
-     isLoggedIn: boolean;
-    isLoggedOut: boolean;
-     resetLink: string;
-     isResetLinkSent: boolean;
-     resetLinlExpirationTime: Date;
-     role: Role;
- }
+export interface IAdmin {
+   id: number;
+   fullname: string;
+   email: string;
+   password: string;
+   username: string
+   createdAt: Date;
+   isVerified: boolean;
+   isRegistered: boolean;
+   isLoggedIn: boolean;
+   isLoggedOut: boolean;
+   loginCount: number;
+   isLocked: boolean;
+   lockedUntil : Date;
 
-@Entity({ name: 'admin'})
- export class AdminEntity implements IAdmin {
+   resetLink: string;
+   isResetLinkSent: boolean;
+   resetLinlExpirationTime: Date;
+   role: Role;
 
-    @PrimaryGeneratedColumn()
-    id: number;
+}
 
-    @Column({ nullable: false })
-    fullname: string;
+@Entity({ name: 'admin' })
+export class AdminEntity implements IAdmin {
 
-    
-    @Column({ nullable: false, unique: true})
-    email: string;
+   @PrimaryGeneratedColumn()
+   id: number;
+
+   @Column({ nullable: false })
+   fullname: string;
+
+
+   @Column({ nullable: false, unique: true })
+   email: string;
+
+   @Column({ nullable: true })
+   password: string;
+
+   @Column({ nullable: false, unique: true })
+   username: string;
+
+   @CreateDateColumn({ nullable: false })
+   createdAt: Date;
 
     @Column({ nullable: true})
-    password: string;
-
-    @Column({ nullable: false, unique: true})
-    username: string;
-
-    @CreateDateColumn ({ nullable: false })
-    createdAt: Date;
-
-   //  @Column({ nullable: false})
-   //  isActive: true;
+     isVerified: boolean
 
    @Column({ nullable: false, default: false })
    isLoggedIn: boolean;
 
-   @Column({ nullable: false, default: false})
+   @Column({ nullable: false, default: false })
    isLoggedOut: boolean;
 
    @Column({ nullable: false, default: false })
@@ -62,6 +66,15 @@ import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeor
    @Column({ nullable: true })
    resetLinlExpirationTime: Date;
 
-   @Column({ nullable: false, type: 'enum', enum: Role, default: Role.TEACHER }) 
+   @Column({ nullable: false, type: 'enum', enum: Role, default: Role.TEACHER })
    role: Role;
- }
+
+   @Column({nullable: false, default: 0})
+   loginCount: number;
+
+   @Column({ nullable: true})
+   isLocked: boolean;
+
+   @Column({ nullable: true})
+   lockedUntil: Date;
+}

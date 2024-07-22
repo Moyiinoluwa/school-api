@@ -40,6 +40,10 @@ __decorate([
     __metadata("design:type", Date)
 ], AdminEntity.prototype, "createdAt", void 0);
 __decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", Boolean)
+], AdminEntity.prototype, "isVerified", void 0);
+__decorate([
     (0, typeorm_1.Column)({ nullable: false, default: false }),
     __metadata("design:type", Boolean)
 ], AdminEntity.prototype, "isLoggedIn", void 0);
@@ -67,6 +71,18 @@ __decorate([
     (0, typeorm_1.Column)({ nullable: false, type: 'enum', enum: general_enum_1.Role, default: general_enum_1.Role.TEACHER }),
     __metadata("design:type", String)
 ], AdminEntity.prototype, "role", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: false, default: 0 }),
+    __metadata("design:type", Number)
+], AdminEntity.prototype, "loginCount", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", Boolean)
+], AdminEntity.prototype, "isLocked", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", Date)
+], AdminEntity.prototype, "lockedUntil", void 0);
 exports.AdminEntity = AdminEntity = __decorate([
     (0, typeorm_1.Entity)({ name: 'admin' })
 ], AdminEntity);

@@ -54,6 +54,18 @@ let CmsController = class CmsController {
     async teacher(teacherId, teaacherId, message) {
         return await this.cmsService.teacherToTeacher(teacherId, teaacherId, message);
     }
+    async getStudent() {
+        return await this.cmsService.getStudent();
+    }
+    async getTeacher() {
+        return await this.cmsService.getTeacher();
+    }
+    async sendMail(id) {
+        return await this.cmsService.sendMailToStudent(id);
+    }
+    async sendMailTeacher(id) {
+        return await this.cmsService.sendMailToTeachers(id);
+    }
 };
 exports.CmsController = CmsController;
 __decorate([
@@ -157,6 +169,32 @@ __decorate([
     __metadata("design:paramtypes", [Number, Number, String]),
     __metadata("design:returntype", Promise)
 ], CmsController.prototype, "teacher", null);
+__decorate([
+    (0, common_1.Get)('/get-students'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], CmsController.prototype, "getStudent", null);
+__decorate([
+    (0, common_1.Get)('/get-teachers'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], CmsController.prototype, "getTeacher", null);
+__decorate([
+    (0, common_1.Post)('/mail-student/:id'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], CmsController.prototype, "sendMail", null);
+__decorate([
+    (0, common_1.Post)('/mail-teacher/:id'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], CmsController.prototype, "sendMailTeacher", null);
 exports.CmsController = CmsController = __decorate([
     (0, common_1.Controller)('cms'),
     __metadata("design:paramtypes", [cms_service_1.CmsService])

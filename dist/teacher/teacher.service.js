@@ -158,7 +158,7 @@ let TeacherService = class TeacherService {
     async loginTeacher(dto) {
         const teacher = await this.teacherRepository.findOne({ where: { email: dto.email } });
         if (!teacher) {
-            throw new common_1.BadRequestException('teacher cannot login');
+            throw new common_1.BadRequestException('teacher is not registered');
         }
         const access = await this.comparePassword(dto.password, teacher.password);
         if (!access) {
@@ -171,9 +171,6 @@ let TeacherService = class TeacherService {
         }
         teacher.loginCount = 0;
         teacher.isLoggedIn = true;
-        if (!teacher.isVerified) {
-            throw new common_1.BadRequestException('Account is not verified, please request for verification code.');
-        }
         await this.teacherRepository.save(teacher);
         return await this.signToken(teacher.id, teacher.email, teacher.role);
     }
@@ -215,6 +212,14 @@ let TeacherService = class TeacherService {
         else {
             return teacher;
         }
+    }
+    async deleteTeacher(id) {
+        const teacher = await this.teacherRepository.findOne({ where: { id } });
+        if (!teacher) {
+            throw new common_1.BadRequestException('cannot delete teacher');
+        }
+        await this.teacherRepository.remove(teacher);
+        return { message: 'teacher deleted' };
     }
 };
 exports.TeacherService = TeacherService;

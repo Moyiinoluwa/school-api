@@ -23,3 +23,18 @@ export class CreateAdminDto {
     @IsString()
     username: string
 }
+
+export class UpdateAdminDto {
+    @IsNotEmpty({ message: 'fullname is required'})
+    @IsString()
+    fullname: string
+
+    @IsNotEmpty({ message: 'email is required'})
+    @IsEmail()
+    email: string
+
+    @IsNotEmpty({ message: 'username is required'})
+    @IsString()
+    username: string
+    
+}
