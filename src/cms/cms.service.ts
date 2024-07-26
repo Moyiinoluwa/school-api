@@ -5,7 +5,7 @@ import { TeacherRepository } from 'src/teacher/teacher.repository';
 import { AssignmentRepository, MessageRepository } from './cms.repository';
 import { MessageEntity } from 'src/Entity/message.entity';
 import { UploadService } from 'src/Helpers/upload.service';
-import { SendEmailTeacher, SendMailToStudent, StudentScoreDto } from './cms.dto';
+import { StudentScoreDto } from './cms.dto';
 import { AssignmentEntity } from 'src/Entity/assignment.entity';
 import { StudentEntity } from 'src/Entity/student.entity';
 import { TeacherEntity } from 'src/Entity/teacher.entity';

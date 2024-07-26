@@ -19,6 +19,7 @@ const typeorm_service_1 = require("./typeorm/typeorm.service");
 const teacher_module_1 = require("./teacher/teacher.module");
 const admin_module_1 = require("./admin/admin.module");
 const cms_module_1 = require("./cms/cms.module");
+const auth_module_1 = require("./auth/auth.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -43,7 +44,8 @@ exports.AppModule = AppModule = __decorate([
             }),
             teacher_module_1.TeacherModule,
             admin_module_1.AdminModule,
-            cms_module_1.CmsModule
+            cms_module_1.CmsModule,
+            auth_module_1.AuthModule
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],

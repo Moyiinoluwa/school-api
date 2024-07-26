@@ -10,6 +10,7 @@ import { TypeormService } from './typeorm/typeorm.service';
 import { TeacherModule } from './teacher/teacher.module';
 import { AdminModule } from './admin/admin.module';
 import { CmsModule } from './cms/cms.module';
+import { AuthModule } from './auth/auth.module';
 
 
 
@@ -33,7 +34,8 @@ import { CmsModule } from './cms/cms.module';
     }),
     TeacherModule,
     AdminModule,
-    CmsModule
+    CmsModule,
+    AuthModule
   ],
   controllers: [AppController],
   providers: [AppService],

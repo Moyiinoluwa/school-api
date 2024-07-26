@@ -76,7 +76,7 @@ let Mailer = class Mailer {
         <body>
         <h1>Announcemen</h1>
         <h1>Hello ${name}</h1>
-        <h1> All student are to meet at lobby at the end classes today.</h1>
+        <h1> All student are to meet at the lobby at the end classes today.</h1>
         <P> Please note that attendance is complusory</P>
         <p> Management</p>
         </body>
